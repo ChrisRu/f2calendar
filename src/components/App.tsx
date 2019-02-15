@@ -6,6 +6,17 @@ const Code = styled.code`
   white-space: pre;
   word-break: normal;
   word-wrap: normal;
+  color: #fff;
+  max-height: 30vh;
+  overflow: hidden;
+  display: block;
+`;
+
+const Title = styled.h3`
+  font-family: sans-serif;
+  text-align: center;
+  margin: 5rem 0;
+  font-size: 3rem;
 `;
 
 function App() {
@@ -18,7 +29,12 @@ function App() {
       .then(data => setData(JSON.stringify(data, null, 4)));
   }, []);
 
-  return <Code>{data}</Code>;
+  return (
+    <>
+      <Title>Coming soon™</Title>
+      <Code>{data}</Code>
+    </>
+  );
 }
 
 export default App;

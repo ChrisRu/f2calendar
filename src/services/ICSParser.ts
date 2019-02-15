@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 
 function unescapeFileContent(fileContent: string) {
   return fileContent
@@ -9,11 +9,11 @@ function unescapeFileContent(fileContent: string) {
 }
 
 function parseValue(value: string) {
-  if ('TRUE' === value) {
+  if ('TRUE' === value.toUpperCase()) {
     return true;
   }
 
-  if ('FALSE' === value) {
+  if ('FALSE' === value.toUpperCase()) {
     return false;
   }
 
@@ -25,39 +25,44 @@ function parseValue(value: string) {
   return value;
 }
 
-export function parseICS(fileContent: string) {
+function lexICS(fileContent: string) {
   return unescapeFileContent(fileContent)
     .split('\n')
-    .map(e => e.trim())
-    .filter(e => e)
-    .map(line => line.split(':', 2) as [string, string])
-    .reduce(
-      ([previousIndentation, previousResult], [lineName, lineValue]) => {
-        const indentation = R.cond([
-          [
-            R.equals('BEGIN'),
-            () => {
-              return null;
-            }
-          ],
-          [
-            R.equals('END'),
-            () => {
-              return null;
-            }
-          ],
-          [
-            R.T,
-            () => {
-              return null;
-            }
-          ]
-        ])(lineName);
+    .map(line => line.trim())
+    .filter(line => line)
+    .map(line => line.split(':', 2))
+    .map(([key, value]) => [key, value] as [string, string]);
+}
 
-        const result = {};
+export function parseICS(fileContent: string) {
+  const lexed = lexICS(fileContent);
 
-        return [indentation, result];
-      },
-      [R.lensPath([]), {}] as [R.Lens, any]
-    )[1];
+  let result: any = {};
+
+  let indentation: ReadonlyArray<string | number> = [];
+  for (const [lineName, lineValue] of lexed) {
+    if (lineName === 'BEGIN') {
+      indentation = [...indentation, lineValue];
+      const p: any = R.path(indentation, result);
+      indentation = [...indentation, p ? p.length : 0];
+
+      if (!R.view(R.lensPath(indentation), result)) {
+        result = R.set(R.lensPath(indentation), {}, result);
+      }
+
+      continue;
+    } else if (lineName === 'END') {
+      indentation = indentation.slice(0, -2);
+
+      continue;
+    }
+
+    result = R.set(
+      R.lensPath([...indentation, lineName]),
+      parseValue(lineValue),
+      result
+    );
+  }
+
+  return result;
 }
