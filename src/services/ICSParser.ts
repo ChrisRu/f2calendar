@@ -25,44 +25,46 @@ function parseValue(value: string) {
   return value;
 }
 
-function lexICS(fileContent: string) {
-  return unescapeFileContent(fileContent)
+export function parseICS(fileContent: string) {
+  type Reducer = [ReadonlyArray<string | number>, any];
+
+  const [_, parsed] = unescapeFileContent(fileContent)
     .split('\n')
     .map(line => line.trim())
     .filter(line => line)
     .map(line => line.split(':', 2))
-    .map(([key, value]) => [key, value] as [string, string]);
-}
+    .reduce(
+      ([nestingLevel, parseResult], [lineName, lineValue]) => {
+        switch (lineName) {
+          case 'BEGIN': {
+            const newNestingLevel = [
+              ...nestingLevel,
+              lineValue,
+              R.pathOr(0, [...nestingLevel, lineValue, 'length'], parseResult)
+            ];
 
-export function parseICS(fileContent: string) {
-  const lexed = lexICS(fileContent);
+            return [newNestingLevel, parseResult] as Reducer;
+          }
 
-  let result: any = {};
+          case 'END': {
+            const newNestingLevel = nestingLevel.slice(0, -2);
 
-  let indentation: ReadonlyArray<string | number> = [];
-  for (const [lineName, lineValue] of lexed) {
-    if (lineName === 'BEGIN') {
-      indentation = [...indentation, lineValue];
-      const p: any = R.path(indentation, result);
-      indentation = [...indentation, p ? p.length : 0];
+            return [newNestingLevel, parseResult] as Reducer;
+          }
 
-      if (!R.view(R.lensPath(indentation), result)) {
-        result = R.set(R.lensPath(indentation), {}, result);
-      }
+          default: {
+            const newParseResult = R.set(
+              R.lensPath([...nestingLevel, lineName]),
+              parseValue(lineValue),
+              parseResult
+            );
 
-      continue;
-    } else if (lineName === 'END') {
-      indentation = indentation.slice(0, -2);
-
-      continue;
-    }
-
-    result = R.set(
-      R.lensPath([...indentation, lineName]),
-      parseValue(lineValue),
-      result
+            return [nestingLevel, newParseResult] as Reducer;
+          }
+        }
+      },
+      [[], {}] as Reducer
     );
-  }
 
-  return result;
+  return parsed;
 }

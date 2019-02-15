@@ -1,9 +1,9 @@
 import { parseICS } from '../ICSParser';
 
 test('ics parser - splitting verbs', () => {
-  const result = parseICS(`BEGIN:VCALENDAR`);
+  const result = parseICS(`X-VALUE:VCALENDAR`);
 
-  expect(result).toEqual({ VCALENDAR: [{}] });
+  expect(result).toEqual({ 'X-VALUE': 'VCALENDAR' });
 });
 
 test('ics parser - indentation', () => {
@@ -99,13 +99,23 @@ test('ics parser - realistic example', () => {
     DTSTART;VALUE=DATE-TIME:20190315T010000Z
     DTEND;VALUE=DATE-TIME:20190315T023000Z
     DTSTAMP:20190315T010000Z
-    CATEGORIES:First Practice Session
+    CATEGORIES:Second Practice Session
     GEO:-37.8373;144.9666
     SEQUENCE:2019
     BEGIN:VALARM
     ACTION:DISPLAY
     DESCRIPTION:Second Practice Session (Australian Grand Prix) starts in 20 minutes
     TRIGGER:-P0DT0H20M0S
+    END:VALARM
+    BEGIN:VALARM
+    ACTION:DISPLAY
+    DESCRIPTION:Second Practice Session (Australian Grand Prix) starts in 10 minutes
+    TRIGGER:-P0DT0H10M0S
+    END:VALARM
+    BEGIN:VALARM
+    ACTION:DISPLAY
+    DESCRIPTION:Second Practice Session (Australian Grand Prix) is starting now
+    TRIGGER:-P0DT0H0M0S
     END:VALARM
     END:VEVENT
 
@@ -132,8 +142,7 @@ test('ics parser - realistic example', () => {
             VALARM: [
               {
                 ACTION: 'DISPLAY',
-                DESCRIPTION:
-                  'First Practice Session (Australian Grand Prix) starts in 20 minutes',
+                DESCRIPTION: 'First Practice Session (Australian Grand Prix) starts in 20 minutes',
                 TRIGGER: '-P0DT0H20M0S'
               }
             ]
@@ -151,9 +160,18 @@ test('ics parser - realistic example', () => {
             VALARM: [
               {
                 ACTION: 'DISPLAY',
-                DESCRIPTION:
-                  'First Practice Session (Australian Grand Prix) starts in 20 minutes',
+                DESCRIPTION: 'Second Practice Session (Australian Grand Prix) starts in 20 minutes',
                 TRIGGER: '-P0DT0H20M0S'
+              },
+              {
+                ACTION: 'DISPLAY',
+                DESCRIPTION: 'Second Practice Session (Australian Grand Prix) starts in 10 minutes',
+                TRIGGER: '-P0DT0H10M0S'
+              },
+              {
+                ACTION: 'DISPLAY',
+                DESCRIPTION: 'Second Practice Session (Australian Grand Prix) is starting now',
+                TRIGGER: '-P0DT0H0M0S'
               }
             ]
           }
