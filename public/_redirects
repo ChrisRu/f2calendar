@@ -1,0 +1,2 @@
+# Redirect default Netlify subdomain to primary domain
+http://f2calendar.netlify.com/* http://f2calendar.com/:splat 301!
