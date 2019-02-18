@@ -1,40 +1,45 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { parseICS } from '../services/ICSParser';
+import { useCalendarApi, IEvent } from '../hooks/calendarApi';
+import { Event } from './Event';
 
-const Code = styled.code`
-  white-space: pre;
-  word-break: normal;
-  word-wrap: normal;
-  color: #fff;
-  max-height: 30vh;
-  overflow: hidden;
-  display: block;
+const Events = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  padding: 1rem;
 `;
 
-const Title = styled.h3`
-  font-family: sans-serif;
-  text-align: center;
-  margin: 5rem 0;
-  font-size: 3rem;
+const Title = styled.h1`
+  padding: 0 4rem;
 `;
 
-function App() {
-  const [data, setData] = React.useState('');
+export function App() {
+  const { data, isLoading, isError } = useCalendarApi('/f2_calendar.ics');
 
-  useEffect(() => {
-    void fetch('/f2_calendar.ics')
-      .then(res => res.text())
-      .then(parseICS)
-      .then(data => setData(JSON.stringify(data, null, 4)));
-  }, []);
+  if (isError) {
+    return <div>Something went wrong loading while loading the calendar</div>;
+  }
+
+  if (isLoading || !data) {
+    return null;
+  }
 
   return (
     <>
-      <Title>Coming soon™</Title>
-      <Code>{data}</Code>
+      <Title>{data['X-WR-CALNAME']}</Title>
+      <Events>
+        {Object.values(
+          data.VEVENT.reduce(
+            (races, event) => ({
+              ...races,
+              [event.LOCATION]: (races[event.LOCATION] || []).concat(event)
+            }),
+            {} as { [x: string]: IEvent[] }
+          )
+        ).map(events => (
+          <Event events={events} />
+        ))}
+      </Events>
     </>
   );
 }
-
-export default App;
