@@ -36,7 +36,7 @@ const Flag = styled.img`
   margin-right: 0.5rem;
 `;
 
-const currentDate = parse('2019/08/04');
+const currentDate = new Date();
 function isPast(date: string) {
   return isAfter(currentDate, date);
 }
