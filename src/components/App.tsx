@@ -6,6 +6,9 @@ import { Event } from './Event';
 const Events = styled.div`
   display: flex;
   flex-flow: row wrap;
+  justify-content: center;
+  max-width: 1700px;
+  margin: 0 auto;
   padding: 1rem;
 `;
 
@@ -37,7 +40,7 @@ export function App() {
             {} as { [x: string]: IEvent[] }
           )
         ).map(events => (
-          <Event events={events} />
+          <Event key={events[0].DTSTAMP} events={events} />
         ))}
       </Events>
     </>
