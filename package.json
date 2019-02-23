@@ -1,7 +1,10 @@
 {
-  "name": "formula2",
+  "name": "f2calendar",
+  "description": "Formula 2 Calendar Viewer",
+  "author": "Christian Ruigrok",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "date-fns": "^1.30.1",
     "ramda": "^0.26.1",
