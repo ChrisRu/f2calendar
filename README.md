@@ -2,6 +2,10 @@
 
 A react app to view the Formula 2 2019 calendar
 
+[![Licence](https://img.shields.io/github/license/ChrisRu/f2calendar.svg)](https://github.com/ChrisRu/f2calendar/blob/master/LICENSE.md)
+[![Tests](https://circleci.com/gh/circleci/mongofinil.svg?&style=shield&circle-token=b14acf911433d315298235b0c2fbf7b2670a92a8)](https://circleci.com/gh/ChrisRu/f2calendar)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/da2d194f-03a5-496d-a93f-b2a946045752/deploy-status)](https://app.netlify.com/sites/f2calendar/deploys)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
