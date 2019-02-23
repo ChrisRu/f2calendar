@@ -1,3 +1,7 @@
+# Formula 2
+
+A react app to view the Formula 2 2019 calendar
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
