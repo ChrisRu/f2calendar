@@ -18,9 +18,11 @@
     "@types/ramda": "^0.25.50",
     "@types/react": "16.8.3",
     "@types/react-dom": "16.8.1",
-    "@types/styled-components": "^4.1.10"
+    "@types/styled-components": "^4.1.10",
+    "source-map-explorer": "^1.7.0"
   },
   "scripts": {
+    "analyze": "source-map-explorer build/static/js/2*",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
