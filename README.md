@@ -1,4 +1,4 @@
-# Formula 2
+# Formula 2 Race Calendar Viewer
 
 A react app to view the Formula 2 2019 calendar
 
