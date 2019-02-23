@@ -8,7 +8,21 @@ function unescapeFileContent(fileContent: string) {
     .replace(/\\\\/g, '\\');
 }
 
-function parseValue(value: string) {
+function parseValue(key: string, value: string) {
+  if (['DTSTAMP', 'DTSTART', 'DTEND'].some(prefix => key.startsWith(prefix))) {
+    const properties = key.split(';').slice(1);
+
+    const returnValue: { [x: string]: string; _value: string } = { _value: value };
+
+    properties.forEach(property => {
+      const [propertyKey, propertyValue] = property.split('=');
+
+      returnValue[propertyKey] = propertyValue;
+    });
+
+    return returnValue;
+  }
+
   if ('TRUE' === value.toUpperCase()) {
     return true;
   }
@@ -32,7 +46,10 @@ export function parseICS(fileContent: string) {
     .split('\n')
     .map(line => line.trim())
     .filter(line => line)
-    .map(line => line.split(':', 2))
+    .map(line => {
+      const index = line.indexOf(':');
+      return [line.slice(0, index), line.slice(index + 1)];
+    })
     .reduce(
       ([nestingLevel, parseResult], [lineName, lineValue]) => {
         switch (lineName) {
@@ -54,8 +71,8 @@ export function parseICS(fileContent: string) {
 
           default: {
             const newParseResult = R.set(
-              R.lensPath([...nestingLevel, lineName]),
-              parseValue(lineValue),
+              R.lensPath([...nestingLevel, lineName.split(';')[0]]),
+              parseValue(lineName, lineValue),
               parseResult
             );
 

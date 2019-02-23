@@ -7,13 +7,13 @@ const Events = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  max-width: 1700px;
-  margin: 0 auto;
-  padding: 1rem;
+  max-width: 1800px;
+  margin: 3rem auto 0;
 `;
 
 const Title = styled.h1`
-  padding: 0 4rem;
+  margin: 0 auto;
+  display: block;
 `;
 
 export function App() {
@@ -27,20 +27,26 @@ export function App() {
     return null;
   }
 
+  const calName = data['X-WR-CALNAME'] || `Calendar ${new Date().getFullYear()}`;
+  const title = calName
+    ? `Calendar ${new Date().getFullYear()}`
+    : calName.replace('FORMULA-', 'Formula ');
+  const groupedEvents = Object.values(
+    (data.VEVENT || []).reduce(
+      (races, event) => ({
+        ...races,
+        [event.LOCATION || 'location']: (races[event.LOCATION || 'location'] || []).concat(event)
+      }),
+      {} as { [x: string]: IEvent[] }
+    )
+  );
+
   return (
     <>
-      <Title>{data['X-WR-CALNAME']}</Title>
+      <Title>{title}</Title>
       <Events>
-        {Object.values(
-          data.VEVENT.reduce(
-            (races, event) => ({
-              ...races,
-              [event.LOCATION]: (races[event.LOCATION] || []).concat(event)
-            }),
-            {} as { [x: string]: IEvent[] }
-          )
-        ).map(events => (
-          <Event key={events[0].DTSTAMP} events={events} />
+        {groupedEvents.map(events => (
+          <Event key={events[0].UID} events={events} />
         ))}
       </Events>
     </>

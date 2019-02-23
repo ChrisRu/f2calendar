@@ -6,6 +6,25 @@ test('ics parser - splitting verbs', () => {
   expect(result).toEqual({ 'X-VALUE': 'VCALENDAR' });
 });
 
+test('ics parser - with metadata', () => {
+  const result = parseICS(`DTSTART;TZID=Asia/Bahrain:20190330T174000Z`);
+
+  expect(result).toEqual({
+    DTSTART: {
+      TZID: 'Asia/Bahrain',
+      _value: '20190330T174000Z'
+    }
+  });
+});
+
+test('ics parser - link', () => {
+  const result = parseICS(`UID:https://google.com/`);
+
+  expect(result).toEqual({
+    UID: 'https://google.com/'
+  });
+});
+
 test('ics parser - indentation', () => {
   const result = parseICS(`
     BEGIN:VCALENDAR
@@ -56,7 +75,6 @@ test('ics parser - multiple indentation', () => {
           {
             LOCATION: 'Melbourne'
           },
-
           {
             LOCATION: 'Chicago'
           }
@@ -131,14 +149,14 @@ test('ics parser - realistic example', () => {
         VEVENT: [
           {
             CATEGORIES: 'First Practice Session',
-            'DTEND;VALUE=DATE-TIME': '20190315T023000Z',
-            DTSTAMP: '20190315T010000Z',
-            'DTSTART;VALUE=DATE-TIME': '20190315T010000Z',
+            DTEND: { _value: '20190315T023000Z', VALUE: 'DATE-TIME' },
+            DTSTAMP: { _value: '20190315T010000Z' },
+            DTSTART: { _value: '20190315T010000Z', VALUE: 'DATE-TIME' },
             GEO: '-37.8373;144.9666',
             LOCATION: 'Melbourne',
             SEQUENCE: 2019,
             SUMMARY: 'First Practice Session (Australian Grand Prix)',
-            UID: 'http',
+            UID: 'http://2019.f1calendar.com#GP1_2019P1',
             VALARM: [
               {
                 ACTION: 'DISPLAY',
@@ -149,14 +167,14 @@ test('ics parser - realistic example', () => {
           },
           {
             CATEGORIES: 'Second Practice Session',
-            'DTEND;VALUE=DATE-TIME': '20190315T023000Z',
-            DTSTAMP: '20190315T010000Z',
-            'DTSTART;VALUE=DATE-TIME': '20190315T010000Z',
+            DTEND: { _value: '20190315T023000Z', VALUE: 'DATE-TIME' },
+            DTSTAMP: { _value: '20190315T010000Z' },
+            DTSTART: { _value: '20190315T010000Z', VALUE: 'DATE-TIME' },
             GEO: '-37.8373;144.9666',
             LOCATION: 'Melbourne',
             SEQUENCE: 2019,
             SUMMARY: 'Second Practice Session (Australian Grand Prix)',
-            UID: 'http',
+            UID: 'http://2019.f1calendar.com#GP1_2019P1',
             VALARM: [
               {
                 ACTION: 'DISPLAY',
@@ -176,7 +194,7 @@ test('ics parser - realistic example', () => {
             ]
           }
         ],
-        'X-ORIGINAL-URL': 'http',
+        'X-ORIGINAL-URL': 'http://www.f2calendar.com',
         'X-WR-CALNAME': 'F2 Calendar 2019'
       }
     ]
