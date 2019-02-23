@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { format, parse, isAfter } from 'date-fns';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
+import isAfter from 'date-fns/is_after';
 import { IEvent } from '../hooks/calendarApi';
 
 const Wrapper = styled.div<{ isPast: boolean }>`
