@@ -1,27 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import isAfter from 'date-fns/is_after';
 import { IEvent } from '../hooks/calendarApi';
+import { isPast } from '../services/dates';
+import { Race } from './Race';
 
 const Wrapper = styled.div<{ isPast: boolean }>`
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  margin: 0 0 3rem 3rem;
-  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 0 0 2rem 2rem;
+  border-radius: 12px;
   background: #fff;
   opacity: ${props => (props.isPast ? 0.5 : 1)};
   position: relative;
+  transition: transform 0.1s;
+  will-change: transform;
 
-  p {
-    margin: 0;
+  &:hover {
+    transform: scale(1.02);
   }
 `;
 
-const BackgroundImage = styled.div<{ countryCode: string }>`
+const BackgroundImage = styled.div<{ countryCode?: string }>`
   width: 400px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   height: 300px;
   border: 0;
   background-color: #888;
@@ -51,23 +52,6 @@ const Races = styled.div`
   text-align: center;
 `;
 
-const Race = styled.div<{ isPast: boolean }>`
-  margin: 0 0.3rem;
-  opacity: ${props => (props.isPast ? 0.5 : 1)};
-
-  span {
-    display: block;
-    opacity: 0.8;
-    font-size: 0.9rem;
-  }
-
-  b {
-    margin-top: 0.2rem;
-    display: block;
-    font-size: 1.1rem;
-  }
-`;
-
 const CircuitName = styled.span`
   opacity: 0.8;
   font-weight: normal;
@@ -92,17 +76,12 @@ const Flag = styled.img`
   margin-right: 0.5rem;
 `;
 
-const currentDate = process.env.NODE_ENV === 'development' ? new Date('2019.06.05') : new Date();
-function isPast(date: string) {
-  return isAfter(currentDate, date);
-}
-
 interface IProps {
   events: IEvent[];
 }
 
 export function Event({ events }: IProps) {
-  const location = events[0].LOCATION || 'Unknown, Unknown Circuit';
+  const location = events[0].LOCATION || 'Unknown Circuit, Unknown';
   const hasHappened = isPast(events[events.length - 1].DTEND._value);
   const winner = events[events.length - 1]['X-WINNER'];
   const flagSrc = `/images/flags/${events[0]['X-COUNTRY-CODE']}.svg`;
@@ -113,7 +92,7 @@ export function Event({ events }: IProps) {
   return (
     <Wrapper isPast={hasHappened}>
       {hasHappened && <EventHappened>{winner ? `Won by ${winner}` : 'Event over'}</EventHappened>}
-      <BackgroundImage countryCode={countryCode || 'UK'}>
+      <BackgroundImage countryCode={countryCode}>
         <Location>
           <Flag src={flagSrc} alt={countryCode} />
           <span>{eventLocation}</span>
@@ -121,20 +100,9 @@ export function Event({ events }: IProps) {
         </Location>
       </BackgroundImage>
       <Races>
-        {events.map(event => {
-          const eventSummary = (event.SUMMARY || '').replace(/\s+\(.+\)/, '');
-          const eventDate = event.DTSTART
-            ? format(parse(event.DTSTART._value), 'D MMMM YYYY')
-            : 'Unknown';
-          const hasHappened = isPast(event.DTEND._value);
-
-          return (
-            <Race key={eventSummary} isPast={hasHappened}>
-              <span>{eventSummary}</span>
-              <b>{eventDate}</b>
-            </Race>
-          );
-        })}
+        {events.map(event => (
+          <Race key={event.UID} event={event} />
+        ))}
       </Races>
     </Wrapper>
   );

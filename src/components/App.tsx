@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useCalendarApi, IEvent } from '../hooks/calendarApi';
 import { Event } from './Event';
+import { Footer } from './Footer';
+import { Countdown } from './Countdown';
 
 const Events = styled.div`
   display: flex;
@@ -9,12 +11,23 @@ const Events = styled.div`
   justify-content: center;
   max-width: 1800px;
   margin: 3rem auto 0;
+  padding-right: 2rem;
 `;
 
 const Title = styled.h1`
-  margin: 2rem auto 0;
-  max-width: 1600px;
+  margin: 0;
+  padding: 0;
   display: block;
+`;
+
+const TopBar = styled.header`
+  margin: 3rem auto 2rem;
+  max-width: 1600px;
+  display: flex;
+  padding: 0 2rem;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export function App() {
@@ -28,26 +41,37 @@ export function App() {
     return null;
   }
 
-  const calName = data['X-WR-CALNAME'] || `Calendar ${new Date().getFullYear()}`;
-  const title = calName.replace('FORMULA-', 'Formula ');
+  const calendarName = data['X-WR-CALNAME'] || `Calendar ${new Date().getFullYear()}`;
+  const title = calendarName.replace('FORMULA-', 'Formula ');
+  const events = data.VEVENT || [];
   const groupedEvents = Object.values(
-    (data.VEVENT || []).reduce(
-      (races, event) => ({
-        ...races,
-        [event.LOCATION || 'location']: (races[event.LOCATION || 'location'] || []).concat(event)
-      }),
-      {} as { [x: string]: IEvent[] }
-    )
+    events
+      .filter(event => event.LOCATION)
+      .reduce(
+        (races, event) => {
+          const location = event.LOCATION || '_';
+
+          return {
+            ...races,
+            [location]: (races[location] || []).concat(event)
+          };
+        },
+        {} as { [x: string]: IEvent[] }
+      )
   );
 
   return (
     <>
-      <Title>{title}</Title>
+      <TopBar>
+        <Title>{title}</Title>
+        <Countdown groupedEvents={groupedEvents} />
+      </TopBar>
       <Events>
         {groupedEvents.map(events => (
           <Event key={events[0].UID} events={events} />
         ))}
       </Events>
+      <Footer />
     </>
   );
 }
