@@ -13,6 +13,7 @@ const Events = styled.div`
 
 const Title = styled.h1`
   margin: 0 auto;
+  max-width: 1600px;
   display: block;
 `;
 
@@ -28,9 +29,7 @@ export function App() {
   }
 
   const calName = data['X-WR-CALNAME'] || `Calendar ${new Date().getFullYear()}`;
-  const title = calName
-    ? `Calendar ${new Date().getFullYear()}`
-    : calName.replace('FORMULA-', 'Formula ');
+  const title = calName.replace('FORMULA-', 'Formula ');
   const groupedEvents = Object.values(
     (data.VEVENT || []).reduce(
       (races, event) => ({
