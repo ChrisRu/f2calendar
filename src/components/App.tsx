@@ -12,7 +12,7 @@ const Events = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 0 auto;
+  margin: 2rem auto 0;
   max-width: 1600px;
   display: block;
 `;
