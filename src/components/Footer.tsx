@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Content = styled.p`
   max-width: 1800px;
   margin: 0 auto;
-  padding: 1rem 0;
+  padding: 1rem 2rem;
   text-align: right;
 `;
 
