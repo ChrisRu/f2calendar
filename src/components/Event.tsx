@@ -1,41 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IEvent } from '../hooks/calendarApi';
-import { isPast } from '../services/dates';
 import { Race } from './Race';
 
-const Wrapper = styled.div<{ isPast: boolean }>`
+const Wrapper = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin: 0 0 2rem 2rem;
+  margin: 1rem;
   border-radius: 12px;
   background: #fff;
-  opacity: ${props => (props.isPast ? 0.5 : 1)};
   position: relative;
-  transition: transform 0.1s;
-  will-change: transform;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 `;
 
-const BackgroundImage = styled.div<{ countryCode?: string }>`
-  width: 400px;
+const Background = styled.div<{ big: boolean }>`
+  min-width: ${p => (p.big ? 30 : 25)}vw;
+  height: ${p => (p.big ? 30 : 20)}vw;
+  position: relative;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  height: 300px;
+  overflow: hidden;
+`;
+
+const BackgroundImage = styled.div<{ countryCode?: string; big?: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 0;
   background-color: #888;
-  background-image: url(/images/backgrounds/thumbnail/${props => props.countryCode}.jpg);
+  background-image: url(/images/backgrounds/thumbnail/${p => p.countryCode}.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-end;
+  margin: -3px;
+  filter: blur(${p => (p.big ? 3 : 0)}px);
 `;
 
 const Location = styled.h2`
+  position: absolute;
+  left: 0;
+  bottom: 0;
   padding: 5.5rem 1.5rem 1.5rem;
   margin: 0;
   width: 100%;
@@ -64,7 +68,7 @@ const EventHappened = styled.span`
   display: block;
   position: absolute;
   top: 2rem;
-  right: -1.2rem;
+  right: 2rem;
   background: #000;
   background: rgba(0, 0, 0, 0.7);
   padding: 0.3rem 1rem;
@@ -78,11 +82,13 @@ const Flag = styled.img`
 
 interface IProps {
   events: IEvent[];
+  hasHappened?: boolean;
+  big?: boolean;
+  onSelect?: () => void;
 }
 
-export function Event({ events }: IProps) {
+export function Event({ events, hasHappened = false, big = false, onSelect }: IProps) {
   const location = events[0].LOCATION || 'Unknown Circuit, Unknown';
-  const hasHappened = isPast(events[events.length - 1].DTEND._value);
   const winner = events[events.length - 1]['X-WINNER'];
   const flagSrc = `/images/flags/${events[0]['X-COUNTRY-CODE']}.svg`;
   const circuitName = location.split(', ')[0];
@@ -90,15 +96,16 @@ export function Event({ events }: IProps) {
   const countryCode = events[0]['X-COUNTRY-CODE'];
 
   return (
-    <Wrapper isPast={hasHappened}>
+    <Wrapper onClick={onSelect}>
       {hasHappened && <EventHappened>{winner ? `Won by ${winner}` : 'Event over'}</EventHappened>}
-      <BackgroundImage countryCode={countryCode}>
+      <Background big={big}>
+        <BackgroundImage big={big} countryCode={countryCode} />
         <Location>
           <Flag src={flagSrc} alt={countryCode} />
           <span>{eventLocation}</span>
           <CircuitName>{circuitName}</CircuitName>
         </Location>
-      </BackgroundImage>
+      </Background>
       <Races>
         {events.map(event => (
           <Race key={event.UID} event={event} />

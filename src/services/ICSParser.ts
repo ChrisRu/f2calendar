@@ -70,8 +70,8 @@ export function parseICS(fileContent: string) {
           }
 
           default: {
-            const newParseResult = R.set(
-              R.lensPath([...nestingLevel, lineName.split(';')[0]]),
+            const newParseResult = R.assocPath(
+              [...nestingLevel, lineName.split(';')[0]],
               parseValue(lineName, lineValue),
               parseResult
             );

@@ -7,7 +7,7 @@ import { isPast } from '../services/dates';
 
 const Wrapper = styled.div<{ isPast: boolean }>`
   margin: 0 0.3rem;
-  opacity: ${props => (props.isPast ? 0.5 : 1)};
+  opacity: ${p => (p.isPast ? 0.5 : 1)};
 `;
 
 const RaceType = styled.span`

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Content = styled.p`
-  max-width: 1800px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2rem;
   text-align: right;

@@ -1,28 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useCalendarApi, IEvent } from '../hooks/calendarApi';
-import { Event } from './Event';
 import { Footer } from './Footer';
 import { Countdown } from './Countdown';
-
-const Events = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  max-width: 1800px;
-  margin: 3rem auto 0;
-  padding-right: 2rem;
-`;
+import { currentDate } from '../services/dates';
+import { groupEvents, sortEvents } from '../services/eventService';
+import { Calendar } from './Calendar';
+import { isSameDay, parse } from 'date-fns';
 
 const Title = styled.h1`
   margin: 0;
   padding: 0;
   display: block;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 1.3rem;
+
+  img {
+    width: 70px;
+    vertical-align: middle;
+    margin-right: 1rem;
+  }
 `;
 
 const TopBar = styled.header`
-  margin: 3rem auto 2rem;
-  max-width: 1600px;
+  margin: 2rem auto 1rem;
+  max-width: 1400px;
   display: flex;
   padding: 0 2rem;
   flex-flow: row nowrap;
@@ -41,36 +43,24 @@ export function App() {
     return null;
   }
 
-  const calendarName = data['X-WR-CALNAME'] || `Calendar ${new Date().getFullYear()}`;
-  const title = calendarName.replace('FORMULA-', 'Formula ');
+  const calendarName = `Calendar ${currentDate.getFullYear()}`;
   const events = data.VEVENT || [];
-  const groupedEvents = Object.values(
-    events
-      .filter(event => event.LOCATION)
-      .reduce(
-        (races, event) => {
-          const location = event.LOCATION || '_';
-
-          return {
-            ...races,
-            [location]: (races[location] || []).concat(event)
-          };
-        },
-        {} as { [x: string]: IEvent[] }
-      )
-  );
+  const groupedEvents = groupEvents(events.sort(sortEvents));
 
   return (
     <>
       <TopBar>
-        <Title>{title}</Title>
+        <Title>
+          <img src="/images/F2-logo.png" />
+          {calendarName}
+        </Title>
         <Countdown groupedEvents={groupedEvents} />
       </TopBar>
-      <Events>
-        {groupedEvents.map(events => (
-          <Event key={events[0].UID} events={events} />
-        ))}
-      </Events>
+      <main>
+        <Calendar
+          getEvent={day => events.find(event => isSameDay(parse(event.DTSTAMP._value), day))}
+        />
+      </main>
       <Footer />
     </>
   );

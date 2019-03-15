@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { parseICS } from '../services/ICSParser';
 
 export interface ICalendar {
@@ -31,11 +31,11 @@ export interface IEvent {
 }
 
 export function useCalendarApi(location: string) {
-  const [data, setData] = React.useState<ICalendar | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [isError, setIsError] = React.useState<string | null>(null);
+  const [data, setData] = useState<ICalendar | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState<string | null>(null);
 
-  React.useEffect(function fetchData() {
+  useEffect(function fetchData() {
     setIsError(null);
     setIsLoading(true);
 
