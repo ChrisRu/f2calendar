@@ -1,9 +1,9 @@
 import React from 'react';
-import { addDays, isSameDay } from 'date-fns';
 import styled from 'styled-components';
 import { months, weeks } from './util';
 import { Day, WeekDay } from './Day';
 import { IEvent } from '../../hooks/calendarApi';
+import { addDays } from '../../services/dates';
 
 const daysInTheWeek = 7;
 

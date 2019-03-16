@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
 import { IEvent } from '../hooks/calendarApi';
-import { isPast } from '../services/dates';
+import { isAfter, format, parse } from '../services/dates';
 
 const Wrapper = styled.div<{ isPast: boolean }>`
   margin: 0 0.3rem;
@@ -28,11 +26,9 @@ interface IProps {
 
 export function Race({ event }: IProps) {
   const eventSummary = (event.SUMMARY || '').replace(/\s+\(.+\)/, '');
-  const eventDate = event.DTSTART ? format(parse(event.DTSTART._value), 'D MMMM') : 'Unknown';
-  const eventDateFull = event.DTSTART
-    ? format(parse(event.DTSTART._value), 'D MMMM YYYY')
-    : 'Unknown';
-  const hasHappened = isPast(event.DTEND._value);
+  const eventDate = event.DTSTART ? format(parse(event.DTSTART), 'D MMMM') : 'Unknown';
+  const eventDateFull = event.DTSTART ? format(parse(event.DTSTART), 'D MMMM YYYY') : 'Unknown';
+  const hasHappened = isAfter(event.DTEND);
   const title = `${eventSummary} at ${eventDateFull}`;
 
   return (

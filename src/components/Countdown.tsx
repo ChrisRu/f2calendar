@@ -1,18 +1,21 @@
 import React from 'react';
 import { IEvent } from '../hooks/calendarApi';
-import { isPast, distanceInWords } from '../services/dates';
+import { isAfter, distanceInWords } from '../services/dates';
 
 function calculateTimeLeft(groupedEvents: IEvent[][]) {
-  const futureEvents = groupedEvents.filter(
-    events => !isPast(events[events.length - 1].DTEND._value)
-  );
+  const futureEvents = groupedEvents.filter(events => !isAfter(events[events.length - 1].DTEND));
 
-  const startNextEvent = futureEvents[0][0].DTSTART._value;
-  if (isPast(startNextEvent)) {
-    return `is now live`;
+  const startNextEvent = futureEvents[0][0].DTSTART;
+  const endNextEvent = futureEvents[0][futureEvents[0].length - 1].DTEND;
+  if (isAfter(startNextEvent) && !isAfter(endNextEvent)) {
+    return `Event is now live`;
   } else {
     const distance = distanceInWords(startNextEvent);
-    return `in ${distance}`;
+    if (distance === '0 seconds') {
+      return 'Event is now live';
+    }
+
+    return `Next event in ${distance}`;
   }
 }
 
@@ -21,5 +24,5 @@ interface IProps {
 }
 
 export function Countdown({ groupedEvents: events }: IProps) {
-  return <div>Next event {calculateTimeLeft(events)}</div>;
+  return <div>{calculateTimeLeft(events)}</div>;
 }

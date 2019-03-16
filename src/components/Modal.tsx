@@ -2,6 +2,7 @@ import React, { SyntheticEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { IEvent } from '../hooks/calendarApi';
 import { CloseIcon } from './Icons';
+import { parse, format, convertToLocalTime } from '../services/dates';
 
 const Icon = styled.div`
   position: absolute;
@@ -30,7 +31,7 @@ const CreateSlideInAnimation = ({
   popupTop: boolean;
 }) => keyframes`
   0% {
-    transform: scale(0.6) translate(${popupLeft ? '' : '-'}50%, ${popupTop ? '' : '-'}50%);
+    transform: scale(0.6) translate(${popupLeft ? '-' : ''}50%, ${popupTop ? '-' : ''}50%);
     opacity: 0;
   }
 
@@ -66,7 +67,7 @@ const Card = styled.div<{ country?: string; popupLeft: boolean; popupTop: boolea
   animation-name: ${CreateSlideInAnimation};
   animation-duration: 0.2s;
   animation-fill-mode: forwards;
-  transform-origin: ${p => (p.popupLeft ? 'left' : 'right')} ${p => (p.popupTop ? 'top' : 'bottom')};
+  transform-origin: center center;
   animation-play-state: running;
 
   @media (min-width: 1000px) {
@@ -157,12 +158,20 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
   const circuitName = location.split(', ')[0];
   const eventLocation = location.split(', ')[1];
   const raceType = event.SUMMARY ? event.SUMMARY.split(' (')[0] : 'Unknown Race';
+  const duration = parse(event.DTSTART).valueOf() - parse(event.DTEND).valueOf();
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localTime = event.DTSTART.TZID
+    ? format(convertToLocalTime(event.DTSTART), 'HH:mm')
+    : undefined;
 
   return (
     <Wrapper>
       <Overlay onClick={onClose} />
       <Card country={event['X-COUNTRY-CODE']} popupLeft={popupLeft} popupTop={popupTop}>
         <CardInfo>
+          <p>{raceType}</p>
+          <p>Start time {duration === 0 ? 'unknown' : `${localTime} ${timeZone}`}</p>
           <img src={flagSrc} />
           <h4>{eventLocation}</h4>
           <span>{circuitName}</span>

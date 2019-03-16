@@ -1,5 +1,5 @@
-import compareAsc from 'date-fns/compare_asc';
 import { IEvent } from '../hooks/calendarApi';
+import { compareDatesAscending } from './dates';
 
 export function groupEvents(events: IEvent[]) {
   return Object.values(
@@ -20,5 +20,5 @@ export function groupEvents(events: IEvent[]) {
 }
 
 export function sortEvents(a: IEvent, b: IEvent) {
-  return compareAsc(a.DTEND._value, b.DTEND._value);
+  return compareDatesAscending(a.DTEND, b.DTEND);
 }

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useCalendarApi, IEvent } from '../hooks/calendarApi';
+import { useCalendarApi } from '../hooks/calendarApi';
 import { Footer } from './Footer';
 import { Countdown } from './Countdown';
-import { currentDate } from '../services/dates';
+import { currentDate, isSameDay } from '../services/dates';
 import { groupEvents, sortEvents } from '../services/eventService';
 import { Calendar } from './Calendar';
-import { isSameDay, parse } from 'date-fns';
 
 const Title = styled.h1`
   margin: 0;
@@ -57,9 +56,7 @@ export function App() {
         <Countdown groupedEvents={groupedEvents} />
       </TopBar>
       <main>
-        <Calendar
-          getEvent={day => events.find(event => isSameDay(parse(event.DTSTAMP._value), day))}
-        />
+        <Calendar getEvent={day => events.find(event => isSameDay(event.DTSTAMP, day))} />
       </main>
       <Footer />
     </>

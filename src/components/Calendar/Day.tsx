@@ -1,10 +1,15 @@
 import React, { useState, useRef, useLayoutEffect, memo, SyntheticEvent } from 'react';
 import styled, { css } from 'styled-components';
 import { months } from './util';
-import { isSameDay } from 'date-fns';
 import { IEvent } from '../../hooks/calendarApi';
-import { currentDate } from '../../services/dates';
+import { currentDate, isSameDay } from '../../services/dates';
 import { Modal } from '../Modal';
+
+enum RaceType {
+  Unknown,
+  Sprint,
+  Feature
+}
 
 export const WeekDay = styled.div`
   display: block;
@@ -19,7 +24,19 @@ export const WeekDay = styled.div`
   font-size: 0.75rem;
 `;
 
-const DayWrapper = styled.div<{ faded?: boolean; active?: boolean; hasEvent?: boolean }>`
+const raceBg = (p: { raceType: RaceType }) => {
+  if (p.raceType === RaceType.Sprint) return '#d21e1e';
+  if (p.raceType === RaceType.Feature) return '#36b04d';
+
+  return '#1e83c5';
+};
+
+const DayWrapper = styled.div<{
+  faded?: boolean;
+  active?: boolean;
+  hasEvent?: boolean;
+  raceType: RaceType;
+}>`
   opacity: ${p => (p.faded ? 0.2 : 1)};
   display: block;
   margin: 0.5em;
@@ -29,15 +46,17 @@ const DayWrapper = styled.div<{ faded?: boolean; active?: boolean; hasEvent?: bo
   padding: 0.5em;
   font-weight: ${p => (p.active ? 'bold' : 'normal')};
   color: ${p => (p.active ? '#fff' : '#000')};
-  background: ${p => (p.active ? '#1e83c5' : 'transparent')};
+  background: ${p => (p.active ? raceBg(p) : 'transparent')};
   border-radius: 50%;
   float: left;
   pointer-events: ${p => (p.faded ? 'none' : 'all')};
 
-  ${p =>
-    p.hasEvent &&
-    !p.active &&
-    css`
+  ${p => {
+    if (!p.hasEvent || p.active) {
+      return;
+    }
+
+    return css`
       cursor: pointer;
 
       &:hover {
@@ -54,10 +73,11 @@ const DayWrapper = styled.div<{ faded?: boolean; active?: boolean; hasEvent?: bo
         left: -0.4em;
         width: 180%;
         height: 3px;
-        background: #1e83c5;
+        background: ${raceBg(p)};
         border-radius: 3rem;
       }
-    `}
+    `;
+  }}
 `;
 
 interface IContentProps {
@@ -114,12 +134,20 @@ function DayComponent({ month, day, event }: IProps) {
   const isCurrentMonth = months[day.getMonth()] === month;
   const isCurrentDay = isSameDay(day, currentDate);
 
+  const race = event && event.SUMMARY ? event.SUMMARY.split(' (')[0] : undefined;
+  const raceType = race
+    ? race.includes('Feature')
+      ? RaceType.Feature
+      : RaceType.Sprint
+    : RaceType.Unknown;
+
   return (
     <DayWrapper
       faded={!isCurrentMonth}
       active={isOpen || isCurrentDay}
       hasEvent={!!event}
       onClick={event && openEvent}
+      raceType={raceType}
       ref={event && dayRef}
     >
       <DayContent isToday={isCurrentDay} summary={event && event.SUMMARY} day={day} />

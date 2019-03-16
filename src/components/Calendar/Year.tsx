@@ -1,9 +1,9 @@
 import React from 'react';
-import { addMonths, getDaysInMonth } from 'date-fns';
 import styled from 'styled-components';
 import { months } from './util';
 import { Month } from './Month';
 import { IEvent } from '../../hooks/calendarApi';
+import { addMonths, getDaysInMonth } from '../../services/dates';
 
 const YearWrapper = styled.div`
   display: flex;
