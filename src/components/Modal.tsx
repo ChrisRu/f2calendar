@@ -12,6 +12,7 @@ const Icon = styled.div`
   opacity: 0.5;
   width: 1.2rem;
   height: 1.2rem;
+  cursor: pointer;
   transition: opacity 0.1s;
 
   > svg {
