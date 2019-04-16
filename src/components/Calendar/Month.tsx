@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { addDays } from 'date-fns';
 import { months, weeks } from './util';
 import { Day, WeekDay } from './Day';
 import { IEvent } from '../../hooks/calendarApi';
-import { addDays } from '../../services/dates';
 
 const daysInTheWeek = 7;
 
@@ -25,10 +25,10 @@ interface IProps {
   name: string;
   dayAmount: number;
   startDate: Date;
-  getEvent: (day: Date) => IEvent | undefined;
+  getEvents: (day: Date) => IEvent[];
 }
 
-export function Month({ name, dayAmount, startDate, getEvent }: IProps) {
+export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
   function prefixMonthDays(day: Date) {
     const prefill = (day.getDay() === 0 ? 7 : day.getDay()) - 1;
 
@@ -74,7 +74,7 @@ export function Month({ name, dayAmount, startDate, getEvent }: IProps) {
           </WeekDay>
         ))}
         {days.map(day => (
-          <Day key={day.toString() + name} month={month} day={day} event={getEvent(day)} />
+          <Day key={day.toString() + name} month={month} day={day} events={getEvents(day)} />
         ))}
       </DaysWrapper>
     </MonthWrapper>

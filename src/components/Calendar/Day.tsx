@@ -1,14 +1,17 @@
-import React, { useState, useRef, useLayoutEffect, memo, SyntheticEvent } from 'react';
+import React, { useState, useRef, memo, SyntheticEvent } from 'react';
 import styled, { css } from 'styled-components';
+import { isSameDay } from 'date-fns';
 import { months } from './util';
 import { IEvent } from '../../hooks/calendarApi';
-import { currentDate, isSameDay } from '../../services/dates';
+import { currentDate } from '../../services/dates';
 import { Modal } from '../Modal';
 
 enum RaceType {
   Unknown,
   Sprint,
-  Feature
+  Feature,
+  PreSeason,
+  FreePractice
 }
 
 export const WeekDay = styled.div`
@@ -24,9 +27,11 @@ export const WeekDay = styled.div`
   font-size: 0.75rem;
 `;
 
-const raceBg = (p: { raceType: RaceType }) => {
-  if (p.raceType === RaceType.Sprint) return '#d21e1e';
-  if (p.raceType === RaceType.Feature) return '#36b04d';
+const raceBg = ({ raceType }: { raceType: RaceType }) => {
+  if (raceType === RaceType.PreSeason) return '#ffdd4d';
+  if (raceType === RaceType.FreePractice) return '#ffdd4d';
+  if (raceType === RaceType.Sprint) return '#d21e1e';
+  if (raceType === RaceType.Feature) return '#36b04d';
 
   return '#1e83c5';
 };
@@ -102,10 +107,10 @@ function DayContent({ summary, day, isToday }: IContentProps) {
 interface IProps {
   day: Date;
   month: string;
-  event?: IEvent;
+  events: IEvent[];
 }
 
-function DayComponent({ month, day, event }: IProps) {
+function DayComponent({ month, day, events }: IProps) {
   const [isOpen, setOpen] = useState(false);
   const [popupLeft, setPopupLeft] = useState(false);
   const [popupTop, setPopupTop] = useState(false);
@@ -134,25 +139,31 @@ function DayComponent({ month, day, event }: IProps) {
   const isCurrentMonth = months[day.getMonth()] === month;
   const isCurrentDay = isSameDay(day, currentDate);
 
-  const race = event && event.SUMMARY ? event.SUMMARY.split(' (')[0] : undefined;
-  const raceType = race
-    ? race.includes('Feature')
-      ? RaceType.Feature
-      : RaceType.Sprint
+  const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined;
+  const raceType = !race
+    ? RaceType.Unknown
+    : race.includes('Feature')
+    ? RaceType.Feature
+    : race.includes('Sprint')
+    ? RaceType.Sprint
+    : race.includes('Free practice')
+    ? RaceType.FreePractice
+    : race.includes('Pre-season')
+    ? RaceType.PreSeason
     : RaceType.Unknown;
 
   return (
     <DayWrapper
       faded={!isCurrentMonth}
       active={isOpen || isCurrentDay}
-      hasEvent={!!event}
-      onClick={event && openEvent}
+      hasEvent={events.length > 0}
+      onClick={events.length > 0 ? openEvent : undefined}
       raceType={raceType}
-      ref={event && dayRef}
+      ref={events.length > 0 ? dayRef : undefined}
     >
-      <DayContent isToday={isCurrentDay} summary={event && event.SUMMARY} day={day} />
-      {event && isOpen && (
-        <Modal event={event} onClose={closeEvent} popupLeft={popupLeft} popupTop={popupTop} />
+      <DayContent isToday={isCurrentDay} summary={events[0] && events[0].SUMMARY} day={day} />
+      {events.length > 0 && isOpen && (
+        <Modal event={events[0]} onClose={closeEvent} popupLeft={popupLeft} popupTop={popupTop} />
       )}
     </DayWrapper>
   );

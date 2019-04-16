@@ -2,7 +2,8 @@ import React, { SyntheticEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { IEvent } from '../hooks/calendarApi';
 import { CloseIcon } from './Icons';
-import { parse, format, convertToLocalTime } from '../services/dates';
+import { format } from 'date-fns';
+import { getCountryCode } from '../services/eventService';
 
 const Icon = styled.div`
   position: absolute;
@@ -152,23 +153,22 @@ interface IProps {
 }
 
 export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
-  const flagSrc = `/images/flags/${event['X-COUNTRY-CODE']}.svg`;
+  const countryCode = getCountryCode(event.LOCATION);
+  const flagSrc = `/images/flags/${countryCode}.svg`;
 
   const location = event.LOCATION || 'Unknown Circuit, Unknown';
   const circuitName = location.split(', ')[0];
   const eventLocation = location.split(', ')[1];
   const raceType = event.SUMMARY ? event.SUMMARY.split(' (')[0] : 'Unknown Race';
-  const duration = parse(event.DTSTART).valueOf() - parse(event.DTEND).valueOf();
+  const duration = event.DTSTART.valueOf() - event.DTEND.valueOf();
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localTime = event.DTSTART.TZID
-    ? format(convertToLocalTime(event.DTSTART), 'HH:mm')
-    : undefined;
+  const localTime = format(event.DTSTART, 'HH:mm');
 
   return (
     <Wrapper>
       <Overlay onClick={onClose} />
-      <Card country={event['X-COUNTRY-CODE']} popupLeft={popupLeft} popupTop={popupTop}>
+      <Card country={countryCode} popupLeft={popupLeft} popupTop={popupTop}>
         <CardInfo>
           <p>{raceType}</p>
           <p>Start time {duration === 0 ? 'unknown' : `${localTime} ${timeZone}`}</p>

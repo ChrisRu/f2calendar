@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { isSameDay } from 'date-fns';
 import { useCalendarApi } from '../hooks/calendarApi';
 import { Footer } from './Footer';
 import { Countdown } from './Countdown';
-import { currentDate, isSameDay } from '../services/dates';
+import { currentDate } from '../services/dates';
 import { groupEvents, sortEvents } from '../services/eventService';
 import { Calendar } from './Calendar';
 
@@ -56,7 +57,7 @@ export function App() {
         <Countdown groupedEvents={groupedEvents} />
       </TopBar>
       <main>
-        <Calendar getEvent={day => events.find(event => isSameDay(event.DTSTAMP, day))} />
+        <Calendar getEvents={day => events.filter(event => isSameDay(event.DTSTART, day))} />
       </main>
       <Footer />
     </>

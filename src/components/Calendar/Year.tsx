@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { months } from './util';
 import { Month } from './Month';
 import { IEvent } from '../../hooks/calendarApi';
-import { addMonths, getDaysInMonth } from '../../services/dates';
+import { addMonths, getDaysInMonth } from 'date-fns';
 
 const YearWrapper = styled.div`
   display: flex;
@@ -15,10 +15,10 @@ const YearWrapper = styled.div`
 `;
 
 interface IProps {
-  getEvent: (day: Date) => IEvent | undefined;
+  getEvents: (day: Date) => IEvent[];
 }
 
-export function Year({ getEvent }: IProps) {
+export function Year({ getEvents }: IProps) {
   const firstDay = new Date('2019/01/01');
 
   return (
@@ -28,7 +28,7 @@ export function Year({ getEvent }: IProps) {
 
         return (
           <Month
-            getEvent={getEvent}
+            getEvents={getEvents}
             key={startDate.getMonth()}
             name={month}
             dayAmount={getDaysInMonth(startDate)}

@@ -9,20 +9,6 @@ function unescapeFileContent(fileContent: string) {
 }
 
 function parseValue(key: string, value: string) {
-  if (['DTSTAMP', 'DTSTART', 'DTEND'].some(prefix => key.startsWith(prefix))) {
-    const properties = key.split(';').slice(1);
-
-    const returnValue: { [x: string]: string; _value: string } = { _value: value };
-
-    properties.forEach(property => {
-      const [propertyKey, propertyValue] = property.split('=');
-
-      returnValue[propertyKey] = propertyValue;
-    });
-
-    return returnValue;
-  }
-
   if ('TRUE' === value.toUpperCase()) {
     return true;
   }
