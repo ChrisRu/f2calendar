@@ -30,7 +30,7 @@ const countryData = [
   ['de Jerez', 'ES'],
   ['Monaco', 'MC'],
   ['Paul Ricard', 'FR'],
-  ['Spielberg', 'AT'],
+  ['Austria', 'AT'],
   ['Silverstone', 'UK'],
   ['Hungaroring', 'HU'],
   ['Spa-Francorchamps', 'BE'],
@@ -46,7 +46,8 @@ export function getCountryCode(raceDescription?: string) {
 
   const race = countryData.find(([circuit]) => raceDescription.includes(circuit));
   if (!race) {
-    throw new Error('Unknown circuit: ' + raceDescription);
+    console.error('Unknown circuit: ' + raceDescription);
+    return '';
   }
 
   const [_, countryCode] = race;
