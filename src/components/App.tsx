@@ -45,7 +45,6 @@ export function App() {
 
   const calendarName = `Calendar ${currentDate.getFullYear()}`;
   const events = data.VEVENT || [];
-  const groupedEvents = groupEvents(events.sort(sortEvents));
 
   return (
     <>
@@ -54,7 +53,6 @@ export function App() {
           <img src="/images/F2-logo.png" />
           {calendarName}
         </Title>
-        <Countdown groupedEvents={groupedEvents} />
       </TopBar>
       <main>
         <Calendar getEvents={day => events.filter(event => isSameDay(event.DTSTART, day))} />

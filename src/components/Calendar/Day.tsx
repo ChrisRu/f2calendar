@@ -11,7 +11,8 @@ enum RaceType {
   Sprint,
   Feature,
   PreSeason,
-  FreePractice
+  FreePractice,
+  Qualifying
 }
 
 export const WeekDay = styled.div`
@@ -28,8 +29,9 @@ export const WeekDay = styled.div`
 `;
 
 const raceBg = ({ raceType }: { raceType: RaceType }) => {
-  if (raceType === RaceType.PreSeason) return '#ffdd4d';
-  if (raceType === RaceType.FreePractice) return '#ffdd4d';
+  if (raceType === RaceType.PreSeason) return '#f69f2f';
+  if (raceType === RaceType.FreePractice) return '#f69f2f';
+  if (raceType === RaceType.Qualifying) return '#1e83c5';
   if (raceType === RaceType.Sprint) return '#d21e1e';
   if (raceType === RaceType.Feature) return '#36b04d';
 
@@ -144,6 +146,8 @@ function DayComponent({ month, day, events }: IProps) {
     ? RaceType.Unknown
     : race.includes('Feature')
     ? RaceType.Feature
+    : race.includes('Qualifying')
+    ? RaceType.Qualifying
     : race.includes('Sprint')
     ? RaceType.Sprint
     : race.includes('Free practice')
