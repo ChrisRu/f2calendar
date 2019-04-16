@@ -132,6 +132,19 @@ const FadeInAnimation = keyframes`
   }
 `;
 
+const StartTime = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 1;
+
+  span {
+    margin: 0.1rem 0 0;
+    text-align: center;
+    display: block;
+  }
+`;
+
 const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -171,8 +184,11 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
       <Overlay onClick={onClose} />
       <Card country={countryCode} popupLeft={popupLeft} popupTop={popupTop}>
         <CardInfo>
+          <StartTime>
+            <span>{duration === 0 ? 'unknown' : localTime}</span>
+            <span>{timeZone}</span>
+          </StartTime>
           <p>{raceType}</p>
-          <p>Start time {duration === 0 ? 'unknown' : `${localTime} ${timeZone}`}</p>
           <img src={flagSrc} />
           <h4>{eventLocation}</h4>
           <span>{circuitName}</span>

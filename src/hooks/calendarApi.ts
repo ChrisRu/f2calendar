@@ -65,7 +65,9 @@ export function useCalendarApi(location: string) {
       .then(result => result.VCALENDAR[0] as ICalendar<IPreEvent>)
       .then(result => ({
         ...result,
-        VEVENT: result.VEVENT.map(date => parseDate(date, result['X-WR-TIMEZONE']))
+        VEVENT: result.VEVENT.map(date =>
+          parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
+        )
       }))
       .then(setData)
       .then(() => setIsLoading(false))
