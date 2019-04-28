@@ -1,9 +1,9 @@
-import React, { SyntheticEvent } from 'react';
-import styled, { keyframes } from 'styled-components';
-import { IEvent } from '../hooks/calendarApi';
-import { CloseIcon } from './Icons';
-import { format } from 'date-fns';
-import { getCountryCode } from '../services/eventService';
+import React, { SyntheticEvent } from 'react'
+import styled, { keyframes } from 'styled-components'
+import { IEvent } from '../hooks/calendarApi'
+import { CloseIcon } from './Icons'
+import { format } from 'date-fns'
+import { getCountryCode } from '../services/eventService'
 
 const Icon = styled.div`
   position: absolute;
@@ -23,14 +23,14 @@ const Icon = styled.div`
   &:hover {
     opacity: 1;
   }
-`;
+`
 
 const CreateSlideInAnimation = ({
   popupLeft,
-  popupTop
+  popupTop,
 }: {
-  popupLeft: boolean;
-  popupTop: boolean;
+  popupLeft: boolean
+  popupTop: boolean
 }) => keyframes`
   0% {
     transform: scale(0.6) translate(${popupLeft ? '-' : ''}50%, ${popupTop ? '-' : ''}50%);
@@ -41,7 +41,7 @@ const CreateSlideInAnimation = ({
     transform: scale(1) translate(0, 0);
     opacity: 1;
   }
-`;
+`
 
 const Card = styled.div<{ country?: string; popupLeft: boolean; popupTop: boolean }>`
   ${p => (p.popupLeft ? 'left' : 'right')}: 100%;
@@ -75,7 +75,7 @@ const Card = styled.div<{ country?: string; popupLeft: boolean; popupTop: boolea
   @media (min-width: 1000px) {
     position: absolute;
   }
-`;
+`
 
 const CardInfo = styled.div`
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
@@ -103,7 +103,7 @@ const CardInfo = styled.div`
     margin-left: 2.5rem;
     margin-top: 0.4rem;
   }
-`;
+`
 
 const Wrapper = styled.div`
   position: absolute;
@@ -120,7 +120,7 @@ const Wrapper = styled.div`
     bottom: 0;
     right: 0;
   }
-`;
+`
 
 const FadeInAnimation = keyframes`
   0% {
@@ -130,7 +130,7 @@ const FadeInAnimation = keyframes`
   100% {
     opacity: 1;
   }
-`;
+`
 
 const StartTime = styled.div`
   position: absolute;
@@ -143,7 +143,7 @@ const StartTime = styled.div`
     text-align: center;
     display: block;
   }
-`;
+`
 
 const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.2);
@@ -157,27 +157,27 @@ const Overlay = styled.div`
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
   animation-play-state: running;
-`;
+`
 
 interface IProps {
-  event: IEvent;
-  popupLeft: boolean;
-  popupTop: boolean;
-  onClose?: (event: SyntheticEvent) => void;
+  event: IEvent
+  popupLeft: boolean
+  popupTop: boolean
+  onClose?: (event: SyntheticEvent) => void
 }
 
 export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
-  const countryCode = getCountryCode(event.LOCATION);
-  const flagSrc = `/images/flags/${countryCode}.svg`;
+  const countryCode = getCountryCode(event.LOCATION)
+  const flagSrc = `/images/flags/${countryCode}.svg`
 
-  const location = event.LOCATION || 'Unknown Circuit, Unknown';
-  const circuitName = location.split(', ')[0];
-  const eventLocation = location.split(', ')[1];
-  const raceType = event.SUMMARY ? event.SUMMARY.split(' (')[0] : 'Unknown Race';
-  const duration = event.DTSTART.valueOf() - event.DTEND.valueOf();
+  const location = event.LOCATION || 'Unknown Circuit, Unknown'
+  const circuitName = location.split(', ')[0]
+  const eventLocation = location.split(', ')[1]
+  const raceType = event.SUMMARY ? event.SUMMARY.split(' (')[0] : 'Unknown Race'
+  const duration = event.DTSTART.valueOf() - event.DTEND.valueOf()
 
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localTime = format(event.DTSTART, 'HH:mm');
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localTime = format(event.DTSTART, 'HH:mm')
 
   return (
     <Wrapper>
@@ -198,5 +198,5 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
         </CardInfo>
       </Card>
     </Wrapper>
-  );
+  )
 }

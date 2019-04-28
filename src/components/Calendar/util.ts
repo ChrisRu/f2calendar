@@ -10,7 +10,7 @@ export const months = [
   'September',
   'October',
   'November',
-  'December'
-];
+  'December',
+]
 
-export const weeks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+export const weeks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']

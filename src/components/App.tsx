@@ -1,10 +1,9 @@
-import React from 'react';
-import { PrerenderedComponent } from 'react-prerendered-component';
-import styled from 'styled-components';
-import { useCalendarApi, IEvent } from '../hooks/calendarApi';
-import { Footer } from './Footer';
-import { currentDate } from '../services/dates';
-import { Calendar } from './Calendar';
+import React from 'react'
+import styled from 'styled-components'
+import { useCalendarApi, IEvent } from '../hooks/calendarApi'
+import { Footer } from './Footer'
+import { currentDate } from '../services/dates'
+import { Calendar } from './Calendar'
 
 const Title = styled.h1`
   margin: 0;
@@ -18,7 +17,7 @@ const Title = styled.h1`
     vertical-align: middle;
     margin-right: 1rem;
   }
-`;
+`
 
 const TopBar = styled.header`
   margin: 2rem auto 1rem;
@@ -28,36 +27,40 @@ const TopBar = styled.header`
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
-`;
+`
 
 export function App() {
-  const { data, isLoading, isError } = useCalendarApi('/f2_calendar.ics');
+  const { data, isLoading, isError } = useCalendarApi('/f2_calendar.ics')
 
   if (isError) {
-    return <div>Something went wrong loading while loading the calendar</div>;
+    return <div>Something went wrong loading while loading the calendar</div>
   }
 
-  const calendarName = `Calendar ${currentDate.getFullYear()}`;
+  if (isLoading || data.length === 0) {
+    return null
+  }
+
+  const calendarName = `Calendar ${currentDate.getFullYear()}`
 
   function getDateKey(day: Date) {
-    return day.getMonth() + ':' + day.getDate();
+    return day.getMonth() + ':' + day.getDate()
   }
 
   const dayDictionary = data.reduce(
     (dict, nextDate) => {
-      const key = getDateKey(nextDate.DTSTART);
-      dict[key] = (dict[key] || []).concat(nextDate);
-      return dict;
+      const key = getDateKey(nextDate.DTSTART)
+      dict[key] = (dict[key] || []).concat(nextDate)
+      return dict
     },
-    {} as { [x: string]: IEvent[] }
-  );
+    {} as { [x: string]: IEvent[] },
+  )
 
   function getEvents(day: Date) {
-    return dayDictionary[getDateKey(day)] || [];
+    return dayDictionary[getDateKey(day)] || []
   }
 
   return (
-    <PrerenderedComponent live={!isLoading && data.length > 0}>
+    <>
       <TopBar>
         <Title>
           <img src="/images/F2-logo.png" />
@@ -68,6 +71,6 @@ export function App() {
         <Calendar getEvents={getEvents} />
       </main>
       <Footer />
-    </PrerenderedComponent>
-  );
+    </>
+  )
 }

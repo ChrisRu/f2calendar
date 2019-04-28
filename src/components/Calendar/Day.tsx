@@ -1,10 +1,10 @@
-import React, { useState, useRef, memo, SyntheticEvent } from 'react';
-import styled, { css } from 'styled-components';
-import { isSameDay } from 'date-fns';
-import { months } from './util';
-import { IEvent } from '../../hooks/calendarApi';
-import { currentDate } from '../../services/dates';
-import { Modal } from '../Modal';
+import React, { useState, useRef, memo, SyntheticEvent } from 'react'
+import styled, { css } from 'styled-components'
+import { isSameDay } from 'date-fns'
+import { months } from './util'
+import { IEvent } from '../../hooks/calendarApi'
+import { currentDate } from '../../services/dates'
+import { Modal } from '../Modal'
 
 enum RaceType {
   Unknown,
@@ -12,7 +12,7 @@ enum RaceType {
   Feature,
   PreSeason,
   FreePractice,
-  Qualifying
+  Qualifying,
 }
 
 export const WeekDay = styled.div`
@@ -26,23 +26,23 @@ export const WeekDay = styled.div`
   color: #1e83c5;
   opacity: 0.5;
   font-size: 0.75rem;
-`;
+`
 
 const raceBg = ({ raceType }: { raceType: RaceType }) => {
-  if (raceType === RaceType.PreSeason) return '#f69f2f';
-  if (raceType === RaceType.FreePractice) return '#f69f2f';
-  if (raceType === RaceType.Qualifying) return '#1e83c5';
-  if (raceType === RaceType.Sprint) return '#d21e1e';
-  if (raceType === RaceType.Feature) return '#36b04d';
+  if (raceType === RaceType.PreSeason) return '#f69f2f'
+  if (raceType === RaceType.FreePractice) return '#f69f2f'
+  if (raceType === RaceType.Qualifying) return '#1e83c5'
+  if (raceType === RaceType.Sprint) return '#d21e1e'
+  if (raceType === RaceType.Feature) return '#36b04d'
 
-  return '#1e83c5';
-};
+  return '#1e83c5'
+}
 
 const DayWrapper = styled.div<{
-  faded?: boolean;
-  active?: boolean;
-  hasEvent?: boolean;
-  raceType: RaceType;
+  faded?: boolean
+  active?: boolean
+  hasEvent?: boolean
+  raceType: RaceType
 }>`
   opacity: ${p => (p.faded ? 0.2 : 1)};
   display: block;
@@ -60,7 +60,7 @@ const DayWrapper = styled.div<{
 
   ${p => {
     if (!p.hasEvent || p.active) {
-      return;
+      return
     }
 
     return css`
@@ -83,65 +83,65 @@ const DayWrapper = styled.div<{
         background: ${raceBg(p)};
         border-radius: 3rem;
       }
-    `;
+    `
   }}
-`;
+`
 
 interface IContentProps {
-  summary?: string;
-  day: Date;
-  isToday: boolean;
+  summary?: string
+  day: Date
+  isToday: boolean
 }
 
 function DayContent({ summary, day, isToday }: IContentProps) {
-  const dayNumber = day.getDate();
+  const dayNumber = day.getDate()
   const title =
     summary ||
     day.toLocaleString('en-uk', {
       month: 'long',
       day: 'numeric',
-      year: 'numeric'
-    });
+      year: 'numeric',
+    })
 
-  return <span title={(isToday ? 'Today: ' : '') + title}>{dayNumber}</span>;
+  return <span title={(isToday ? 'Today: ' : '') + title}>{dayNumber}</span>
 }
 
 interface IProps {
-  day: Date;
-  month: string;
-  events: IEvent[];
+  day: Date
+  month: string
+  events: IEvent[]
 }
 
 function DayComponent({ month, day, events }: IProps) {
-  const [isOpen, setOpen] = useState(false);
-  const [popupLeft, setPopupLeft] = useState(false);
-  const [popupTop, setPopupTop] = useState(false);
-  const dayRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setOpen] = useState(false)
+  const [popupLeft, setPopupLeft] = useState(false)
+  const [popupTop, setPopupTop] = useState(false)
+  const dayRef = useRef<HTMLDivElement>(null)
 
   function getPosition() {
     if (dayRef.current) {
-      const { left, right, top, bottom } = dayRef.current.getBoundingClientRect();
+      const { left, right, top, bottom } = dayRef.current.getBoundingClientRect()
 
-      setPopupLeft(left + right < window.innerWidth);
-      setPopupTop(top + bottom < window.innerHeight);
+      setPopupLeft(left + right < window.innerWidth)
+      setPopupTop(top + bottom < window.innerHeight)
     }
   }
 
   function openEvent(event: SyntheticEvent) {
-    event.stopPropagation();
-    getPosition();
-    setOpen(true);
+    event.stopPropagation()
+    getPosition()
+    setOpen(true)
   }
 
   function closeEvent(event: SyntheticEvent) {
-    event.stopPropagation();
-    setOpen(false);
+    event.stopPropagation()
+    setOpen(false)
   }
 
-  const isCurrentMonth = months[day.getMonth()] === month;
-  const isCurrentDay = isSameDay(day, currentDate);
+  const isCurrentMonth = months[day.getMonth()] === month
+  const isCurrentDay = isSameDay(day, currentDate)
 
-  const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined;
+  const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race
     ? RaceType.Unknown
     : race.includes('Feature')
@@ -154,7 +154,7 @@ function DayComponent({ month, day, events }: IProps) {
     ? RaceType.FreePractice
     : race.includes('Pre-season')
     ? RaceType.PreSeason
-    : RaceType.Unknown;
+    : RaceType.Unknown
 
   return (
     <DayWrapper
@@ -170,7 +170,7 @@ function DayComponent({ month, day, events }: IProps) {
         <Modal event={events[0]} onClose={closeEvent} popupLeft={popupLeft} popupTop={popupTop} />
       )}
     </DayWrapper>
-  );
+  )
 }
 
-export const Day = memo(DayComponent);
+export const Day = memo(DayComponent)

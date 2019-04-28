@@ -1,29 +1,26 @@
-import { parseICS } from '../ICSParser';
+import { parseICS } from '../ICSParser'
 
 test('ics parser - splitting verbs', () => {
-  const result = parseICS(`X-VALUE:VCALENDAR`);
+  const result = parseICS(`X-VALUE:VCALENDAR`)
 
-  expect(result).toEqual({ 'X-VALUE': 'VCALENDAR' });
-});
+  expect(result).toEqual({ 'X-VALUE': 'VCALENDAR' })
+})
 
 test('ics parser - with metadata', () => {
-  const result = parseICS(`DTSTART;TZID=Asia/Bahrain:20190330T174000Z`);
+  const result = parseICS(`DTSTAMP:20190330T174000Z`)
 
   expect(result).toEqual({
-    DTSTART: {
-      TZID: 'Asia/Bahrain',
-      _value: '20190330T174000Z'
-    }
-  });
-});
+    DTSTAMP: '20190330T174000Z',
+  })
+})
 
 test('ics parser - link', () => {
-  const result = parseICS(`UID:https://google.com/`);
+  const result = parseICS(`UID:https://google.com/`)
 
   expect(result).toEqual({
-    UID: 'https://google.com/'
-  });
-});
+    UID: 'https://google.com/',
+  })
+})
 
 test('ics parser - indentation', () => {
   const result = parseICS(`
@@ -35,7 +32,7 @@ test('ics parser - indentation', () => {
     END:VEVENT
 
     END:VCALENDAR
-  `);
+  `)
 
   expect(result).toEqual({
     VCALENDAR: [
@@ -43,13 +40,13 @@ test('ics parser - indentation', () => {
         VERSION: 2,
         VEVENT: [
           {
-            LOCATION: 'Melbourne'
-          }
-        ]
-      }
-    ]
-  });
-});
+            LOCATION: 'Melbourne',
+          },
+        ],
+      },
+    ],
+  })
+})
 
 test('ics parser - multiple indentation', () => {
   const result = parseICS(`
@@ -65,7 +62,7 @@ test('ics parser - multiple indentation', () => {
     END:VEVENT
 
     END:VCALENDAR
-  `);
+  `)
 
   expect(result).toEqual({
     VCALENDAR: [
@@ -73,16 +70,16 @@ test('ics parser - multiple indentation', () => {
         VERSION: 2,
         VEVENT: [
           {
-            LOCATION: 'Melbourne'
+            LOCATION: 'Melbourne',
           },
           {
-            LOCATION: 'Chicago'
-          }
-        ]
-      }
-    ]
-  });
-});
+            LOCATION: 'Chicago',
+          },
+        ],
+      },
+    ],
+  })
+})
 
 test('ics parser - realistic example', () => {
   const result = parseICS(`
@@ -138,7 +135,7 @@ test('ics parser - realistic example', () => {
     END:VEVENT
 
     END:VCALENDAR
-`);
+`)
 
   expect(result).toEqual({
     VCALENDAR: [
@@ -149,9 +146,9 @@ test('ics parser - realistic example', () => {
         VEVENT: [
           {
             CATEGORIES: 'First Practice Session',
-            DTEND: { _value: '20190315T023000Z', VALUE: 'DATE-TIME' },
-            DTSTAMP: { _value: '20190315T010000Z' },
-            DTSTART: { _value: '20190315T010000Z', VALUE: 'DATE-TIME' },
+            DTEND: '20190315T023000Z',
+            DTSTAMP: '20190315T010000Z',
+            DTSTART: '20190315T010000Z',
             GEO: '-37.8373;144.9666',
             LOCATION: 'Melbourne',
             SEQUENCE: 2019,
@@ -161,15 +158,15 @@ test('ics parser - realistic example', () => {
               {
                 ACTION: 'DISPLAY',
                 DESCRIPTION: 'First Practice Session (Australian Grand Prix) starts in 20 minutes',
-                TRIGGER: '-P0DT0H20M0S'
-              }
-            ]
+                TRIGGER: '-P0DT0H20M0S',
+              },
+            ],
           },
           {
             CATEGORIES: 'Second Practice Session',
-            DTEND: { _value: '20190315T023000Z', VALUE: 'DATE-TIME' },
-            DTSTAMP: { _value: '20190315T010000Z' },
-            DTSTART: { _value: '20190315T010000Z', VALUE: 'DATE-TIME' },
+            DTEND: '20190315T023000Z',
+            DTSTAMP: '20190315T010000Z',
+            DTSTART: '20190315T010000Z',
             GEO: '-37.8373;144.9666',
             LOCATION: 'Melbourne',
             SEQUENCE: 2019,
@@ -179,24 +176,24 @@ test('ics parser - realistic example', () => {
               {
                 ACTION: 'DISPLAY',
                 DESCRIPTION: 'Second Practice Session (Australian Grand Prix) starts in 20 minutes',
-                TRIGGER: '-P0DT0H20M0S'
+                TRIGGER: '-P0DT0H20M0S',
               },
               {
                 ACTION: 'DISPLAY',
                 DESCRIPTION: 'Second Practice Session (Australian Grand Prix) starts in 10 minutes',
-                TRIGGER: '-P0DT0H10M0S'
+                TRIGGER: '-P0DT0H10M0S',
               },
               {
                 ACTION: 'DISPLAY',
                 DESCRIPTION: 'Second Practice Session (Australian Grand Prix) is starting now',
-                TRIGGER: '-P0DT0H0M0S'
-              }
-            ]
-          }
+                TRIGGER: '-P0DT0H0M0S',
+              },
+            ],
+          },
         ],
         'X-ORIGINAL-URL': 'http://www.f2calendar.com',
-        'X-WR-CALNAME': 'F2 Calendar 2019'
-      }
-    ]
-  });
-});
+        'X-WR-CALNAME': 'F2 Calendar 2019',
+      },
+    ],
+  })
+})

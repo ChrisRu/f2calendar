@@ -1,5 +1,5 @@
-import { IEvent } from '../hooks/calendarApi';
-import { compareAsc } from 'date-fns';
+import { IEvent } from '../hooks/calendarApi'
+import { compareAsc } from 'date-fns'
 
 export function groupEvents(events: IEvent[]) {
   return Object.values(
@@ -7,20 +7,20 @@ export function groupEvents(events: IEvent[]) {
       .filter(event => event.LOCATION)
       .reduce(
         (races, event) => {
-          const location = event.LOCATION || '_';
+          const location = event.LOCATION || '_'
 
           return {
             ...races,
-            [location]: (races[location] || []).concat(event)
-          };
+            [location]: (races[location] || []).concat(event),
+          }
         },
-        {} as { [x: string]: IEvent[] }
-      )
-  );
+        {} as { [x: string]: IEvent[] },
+      ),
+  )
 }
 
 export function sortEvents(a: IEvent, b: IEvent) {
-  return compareAsc(a.DTEND, b.DTEND);
+  return compareAsc(a.DTEND, b.DTEND)
 }
 
 const countryData = [
@@ -36,21 +36,21 @@ const countryData = [
   ['Spa-Francorchamps', 'BE'],
   ['Monza', 'IT'],
   ['Sochi', 'RU'],
-  ['Abu Dhabi', 'AE']
-];
+  ['Abu Dhabi', 'AE'],
+]
 
 export function getCountryCode(raceDescription?: string) {
   if (!raceDescription) {
-    return '';
+    return ''
   }
 
-  const race = countryData.find(([circuit]) => raceDescription.includes(circuit));
+  const race = countryData.find(([circuit]) => raceDescription.includes(circuit))
   if (!race) {
-    console.error('Unknown circuit: ' + raceDescription);
-    return '';
+    console.error('Unknown circuit: ' + raceDescription)
+    return ''
   }
 
-  const [_, countryCode] = race;
+  const [_, countryCode] = race
 
-  return countryCode;
+  return countryCode
 }
