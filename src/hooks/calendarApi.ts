@@ -35,23 +35,20 @@ interface IPreEvent extends IGenericEvent {
 export interface IEvent extends IGenericEvent {
   DTSTART: Date;
   DTEND: Date;
-  DTSTAMP: Date;
-  CREATED: Date;
-  'LAST-MODIFIED': Date;
+  DTSTAMP: string;
+  CREATED: string;
+  'LAST-MODIFIED': string;
 }
 
 function parseDate(event: IPreEvent, timeZone: string) {
-  return Object.assign({}, event, {
+  return Object.assign(event, {
     DTSTART: parse(event.DTSTART, timeZone),
-    DTEND: parse(event.DTEND, timeZone),
-    DTSTAMP: parse(event.DTSTAMP, timeZone),
-    CREATED: parse(event.CREATED, timeZone),
-    'LAST-MODIFIED': parse(event['LAST-MODIFIED'], timeZone)
+    DTEND: parse(event.DTEND, timeZone)
   }) as IEvent;
 }
 
 export function useCalendarApi(location: string) {
-  const [data, setData] = useState<ICalendar<IEvent> | null>(null);
+  const [data, setData] = useState<IEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState<string | null>(null);
 
@@ -62,13 +59,11 @@ export function useCalendarApi(location: string) {
     void fetch(location)
       .then(res => res.text())
       .then(parseICS)
-      .then(result => result.VCALENDAR[0] as ICalendar<IPreEvent>)
-      .then(result => ({
-        ...result,
-        VEVENT: result.VEVENT.map(date =>
+      .then(result =>
+        result.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
           parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
         )
-      }))
+      )
       .then(setData)
       .then(() => setIsLoading(false))
       .catch(error => setIsError(error.message || error));

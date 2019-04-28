@@ -1,11 +1,9 @@
 import React from 'react';
+import { PrerenderedComponent } from 'react-prerendered-component';
 import styled from 'styled-components';
-import { isSameDay } from 'date-fns';
-import { useCalendarApi } from '../hooks/calendarApi';
+import { useCalendarApi, IEvent } from '../hooks/calendarApi';
 import { Footer } from './Footer';
-import { Countdown } from './Countdown';
 import { currentDate } from '../services/dates';
-import { groupEvents, sortEvents } from '../services/eventService';
 import { Calendar } from './Calendar';
 
 const Title = styled.h1`
@@ -39,15 +37,27 @@ export function App() {
     return <div>Something went wrong loading while loading the calendar</div>;
   }
 
-  if (isLoading || !data) {
-    return null;
+  const calendarName = `Calendar ${currentDate.getFullYear()}`;
+
+  function getDateKey(day: Date) {
+    return day.getMonth() + ':' + day.getDate();
   }
 
-  const calendarName = `Calendar ${currentDate.getFullYear()}`;
-  const events = data.VEVENT || [];
+  const dayDictionary = data.reduce(
+    (dict, nextDate) => {
+      const key = getDateKey(nextDate.DTSTART);
+      dict[key] = (dict[key] || []).concat(nextDate);
+      return dict;
+    },
+    {} as { [x: string]: IEvent[] }
+  );
+
+  function getEvents(day: Date) {
+    return dayDictionary[getDateKey(day)] || [];
+  }
 
   return (
-    <>
+    <PrerenderedComponent live={!isLoading && data.length > 0}>
       <TopBar>
         <Title>
           <img src="/images/F2-logo.png" />
@@ -55,9 +65,9 @@ export function App() {
         </Title>
       </TopBar>
       <main>
-        <Calendar getEvents={day => events.filter(event => isSameDay(event.DTSTART, day))} />
+        <Calendar getEvents={getEvents} />
       </main>
       <Footer />
-    </>
+    </PrerenderedComponent>
   );
 }

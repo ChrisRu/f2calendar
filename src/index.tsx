@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, hydrate } from 'react-dom';
 import ReactGA from 'react-ga';
 import { createGlobalStyle } from 'styled-components';
 import { App } from './components/App';
@@ -13,22 +13,34 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function render() {
-  ReactDOM.render(
-    <>
-      <GlobalStyle />
-      <App />
-    </>,
-    document.getElementById('root')
-  );
+function renderApp() {
+  const rootElement = document.getElementById('root') as HTMLElement;
+
+  if (rootElement.hasChildNodes()) {
+    hydrate(
+      <>
+        <GlobalStyle />
+        <App />
+      </>,
+      rootElement
+    );
+  } else {
+    render(
+      <>
+        <GlobalStyle />
+        <App />
+      </>,
+      rootElement
+    );
+  }
 }
 
 declare const module: NodeModule;
 if (module.hot) {
-  module.hot.accept(['./components/App'], render);
+  module.hot.accept(['./components/App'], renderApp);
 }
 
-render();
+renderApp();
 
 ReactGA.initialize('UA-58105551-2');
 ReactGA.pageview(window.location.pathname + window.location.search);
