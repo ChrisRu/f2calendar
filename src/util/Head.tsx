@@ -21,8 +21,9 @@ export const Head = () => (
       property="og:description"
       content="Keep track of when your (second) favorite racing series is live"
     />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>F2 Calendar</title>
+    <link rel="shortcut icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700" rel="stylesheet" />
   </Helmet>
 )
