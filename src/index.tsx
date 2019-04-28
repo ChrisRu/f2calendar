@@ -4,6 +4,10 @@ import { createGlobalStyle } from 'styled-components';
 import * as serviceWorker from './serviceWorker';
 import { App } from './components/App';
 import { NodeModule } from './lib/module';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-58105551-2');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const GlobalStyle = createGlobalStyle`
   body {
