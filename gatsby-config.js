@@ -8,7 +8,6 @@ module.exports = {
     `gatsby-plugin-typescript`,
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-netlify`,
-    `gatsby-plugin-ramda`,
     `gatsby-transformer-ics`,
     {
       resolve: `gatsby-source-filesystem`,
