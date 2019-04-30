@@ -2,7 +2,7 @@ import React, { useState, useRef, memo, SyntheticEvent } from 'react'
 import styled, { css } from 'styled-components'
 import { isSameDay } from 'date-fns'
 import { months } from './util'
-import { IEvent } from '../../hooks/calendarApi'
+import { IEvent } from '../App'
 import { currentDate } from '../../services/dates'
 import { Modal } from '../Modal'
 

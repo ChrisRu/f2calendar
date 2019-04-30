@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { addDays } from 'date-fns'
 import { months, weeks } from './util'
 import { Day, WeekDay } from './Day'
-import { IEvent } from '../../hooks/calendarApi'
+import { IEvent } from '../App'
 
 const daysInTheWeek = 7
 

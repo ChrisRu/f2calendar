@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { months } from './util'
 import { Month } from './Month'
-import { IEvent } from '../../hooks/calendarApi'
+import { IEvent } from '../App'
 import { addMonths, getDaysInMonth } from 'date-fns'
 
 const YearWrapper = styled.div`

@@ -1,7 +1,7 @@
 import React from 'react'
 import { currentDate } from '../services/dates'
 import { isAfter, distanceInWords } from 'date-fns'
-import { IEvent } from '../hooks/calendarApi'
+import { IEvent } from './App'
 
 function calculateTimeLeft(groupedEvents: IEvent[][]) {
   const futureEvents = groupedEvents.filter(

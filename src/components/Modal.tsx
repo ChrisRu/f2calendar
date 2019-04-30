@@ -1,9 +1,9 @@
 import React, { SyntheticEvent } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { IEvent } from '../hooks/calendarApi'
 import { CloseIcon } from './Icons'
 import { format } from 'date-fns'
 import { getCountryCode } from '../services/eventService'
+import { IEvent } from './App'
 
 const Icon = styled.div`
   position: absolute;

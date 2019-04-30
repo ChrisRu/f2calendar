@@ -1,5 +1,5 @@
-import { IEvent } from '../hooks/calendarApi'
 import { compareAsc } from 'date-fns'
+import { IEvent } from '../components/App'
 
 export function groupEvents(events: IEvent[]) {
   return Object.values(
