@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { CloseIcon } from './Icons'
 import { format } from 'date-fns'
 import { getCountryCode } from '../services/eventService'
-import { IEvent } from './App'
+import { IEvent } from '../services/calendar'
 
 const Icon = styled.div`
   position: absolute;

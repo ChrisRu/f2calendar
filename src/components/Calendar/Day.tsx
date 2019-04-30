@@ -1,8 +1,8 @@
 import React, { useState, useRef, memo, SyntheticEvent } from 'react'
 import styled, { css } from 'styled-components'
-import { isSameDay } from 'date-fns'
+import { isSameDay, isAfter } from 'date-fns'
 import { months } from './util'
-import { IEvent } from '../App'
+import { IEvent } from '../../services/calendar'
 import { currentDate } from '../../services/dates'
 import { Modal } from '../Modal'
 
@@ -40,11 +40,11 @@ const raceBg = ({ raceType }: { raceType: RaceType }) => {
 
 const DayWrapper = styled.div<{
   faded?: boolean
+  happened?: boolean
   active?: boolean
   hasEvent?: boolean
   raceType: RaceType
 }>`
-  opacity: ${p => (p.faded ? 0.2 : 1)};
   display: block;
   margin: 0.5em;
   width: 1em;
@@ -52,11 +52,11 @@ const DayWrapper = styled.div<{
   line-height: 1em;
   padding: 0.5em;
   font-weight: ${p => (p.active ? 'bold' : 'normal')};
-  color: ${p => (p.active ? '#fff' : '#000')};
+  color: ${p =>
+    p.active ? '#fff' : p.faded && p.happened ? '#DDD' : p.faded || p.happened ? '#AAA' : '#000'};
   background: ${p => (p.active ? raceBg(p) : 'transparent')};
   border-radius: 50%;
   float: left;
-  pointer-events: ${p => (p.faded ? 'none' : 'all')};
 
   ${p => {
     if (!p.hasEvent || p.active) {
@@ -67,12 +67,16 @@ const DayWrapper = styled.div<{
       cursor: pointer;
 
       &:hover {
+        color: #000;
+
         &:after {
           transform: translateY(2px);
+          opacity: 1;
         }
       }
 
       &:after {
+        opacity: ${p.happened || p.faded ? 0.3 : 1};
         content: '';
         display: block;
         position: relative;
@@ -140,6 +144,7 @@ function DayComponent({ month, day, events }: IProps) {
 
   const isCurrentMonth = months[day.getMonth()] === month
   const isCurrentDay = isSameDay(day, currentDate)
+  const isPreviousDay = !isAfter(day, currentDate)
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race
@@ -159,6 +164,7 @@ function DayComponent({ month, day, events }: IProps) {
   return (
     <DayWrapper
       faded={!isCurrentMonth}
+      happened={!isCurrentDay && isPreviousDay}
       active={isOpen || isCurrentDay}
       hasEvent={events.length > 0}
       onClick={events.length > 0 ? openEvent : undefined}

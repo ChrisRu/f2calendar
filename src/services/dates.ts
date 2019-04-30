@@ -1,7 +1,8 @@
-import { parseFromTimeZone } from 'date-fns-timezone'
+import { utcToZonedTime } from 'date-fns-tz'
 
-export const currentDate = process.env.NODE_ENV === 'development' ? new Date() : new Date()
+export const currentDate =
+  process.env.NODE_ENV === 'development' ? new Date('2019/5/8') : new Date()
 
 export function parse(date: string, timeZone: string) {
-  return parseFromTimeZone(date, { timeZone })
+  return utcToZonedTime(date, timeZone)
 }
