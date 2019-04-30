@@ -11,7 +11,6 @@ function calculateTimeLeft(groupedEvents: IEvent[][]) {
   const startNextEvent = futureEvents[0][0].DTSTART
   const endNextEvent = futureEvents[0][futureEvents[0].length - 1].DTEND
   if (isAfter(currentDate, startNextEvent) && !isAfter(currentDate, endNextEvent)) {
-    console.log(currentDate, startNextEvent, endNextEvent)
     return `Event is now live`
   } else {
     const distance = distanceInWords(currentDate, startNextEvent)

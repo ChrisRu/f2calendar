@@ -8,7 +8,7 @@ function unescapeFileContent(fileContent: string) {
     .replace(/\\\\/g, '\\')
 }
 
-function parseValue(key: string, value: string) {
+function parseValue(value: string) {
   if ('TRUE' === value.toUpperCase()) {
     return true
   }
@@ -58,7 +58,7 @@ export function parseICS(fileContent: string) {
           default: {
             const newParseResult = R.assocPath(
               [...nestingLevel, lineName.split(';')[0]],
-              parseValue(lineName, lineValue),
+              parseValue(lineValue),
               parseResult,
             )
 

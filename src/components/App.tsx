@@ -1,9 +1,54 @@
 import React from 'react'
+import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
-import { useCalendarApi, IEvent } from '../hooks/calendarApi'
 import { Footer } from './Footer'
-import { currentDate } from '../services/dates'
+import { currentDate, parse } from '../services/dates'
 import { Calendar } from './Calendar'
+
+// from https://f2fanatic.wordpress.com/interactive-calendar/
+export interface ICalendar<T extends IGenericEvent> {
+  PRODID?: string
+  VERSION?: string
+  CALSCALE: 'string'
+  METHOD?: string
+  'X-WR-CALNAME'?: string
+  'X-WR-TIMEZONE': string
+  VEVENT: T[]
+}
+
+interface IGenericEvent {
+  UID?: string
+  DESCRIPTION: string
+  'X-WINNER'?: string
+  LOCATION?: string
+  SEQUENCE: string
+  STATUS: string
+  SUMMARY: string
+  TRANSP: string
+}
+
+interface IPreEvent extends IGenericEvent {
+  DTSTART: string
+  DTEND: string
+  DTSTAMP: string
+  CREATED: string
+  'LAST-MODIFIED': string
+}
+
+export interface IEvent extends IGenericEvent {
+  DTSTART: Date
+  DTEND: Date
+  DTSTAMP: string
+  CREATED: string
+  'LAST-MODIFIED': string
+}
+
+function parseDate(event: IPreEvent, timeZone: string) {
+  return Object.assign(event, {
+    DTSTART: parse(event.DTSTART, timeZone),
+    DTEND: parse(event.DTEND, timeZone),
+  }) as IEvent
+}
 
 const Title = styled.h1`
   margin: 0;
@@ -30,15 +75,19 @@ const TopBar = styled.header`
 `
 
 export function App() {
-  const { data, isLoading, isError } = useCalendarApi('/f2_calendar.ics')
+  const data = useStaticQuery(graphql`
+    {
+      allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
+        nodes {
+          internal {
+            content
+          }
+        }
+      }
+    }
+  `)
 
-  if (isError) {
-    return <div>Something went wrong loading while loading the calendar</div>
-  }
-
-  if (isLoading || data.length === 0) {
-    return null
-  }
+  const content = JSON.parse(data.allIcs.nodes[0].internal.content)
 
   const calendarName = `Calendar ${currentDate.getFullYear()}`
 
@@ -46,7 +95,9 @@ export function App() {
     return day.getMonth() + ':' + day.getDate()
   }
 
-  const dayDictionary = data.reduce(
+  const dayDictionary = (content.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
+    parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
+  ) as IEvent[]).reduce(
     (dict, nextDate) => {
       const key = getDateKey(nextDate.DTSTART)
       dict[key] = (dict[key] || []).concat(nextDate)

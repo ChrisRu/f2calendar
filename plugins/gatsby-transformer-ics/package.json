@@ -1,0 +1,23 @@
+{
+  "name": "gatsby-transformer-ics",
+  "dependencies": {
+    "@babel/runtime": "^7.0.0",
+    "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/ramda": "^0.26.8",
+    "babel-preset-gatsby-package": "^0.1.4",
+    "cross-env": "^5.1.4"
+  },
+  "peerDependencies": {
+    "gatsby": "^2.0.0"
+  },
+  "scripts": {
+    "build": "babel src --out-dir . --ignore **/__tests__ --extensions \".ts\"",
+    "prepare": "cross-env NODE_ENV=production npm run build",
+    "watch": "babel -w src --out-dir . --ignore **/__tests__ --extensions \".ts\""
+  }
+}

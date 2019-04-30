@@ -9,6 +9,14 @@ module.exports = {
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-netlify`,
     `gatsby-plugin-ramda`,
+    `gatsby-transformer-ics`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `calendars`,
+        path: `${__dirname}/static/calendars/`,
+      },
+    },
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
