@@ -24,6 +24,5 @@ export const Head = () => (
     <title>F2 Calendar</title>
     <link rel="shortcut icon" href="/favicon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700" rel="stylesheet" />
   </Helmet>
 )
