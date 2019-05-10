@@ -143,8 +143,8 @@ function DayComponent({ month, day, events }: IProps) {
   }
 
   const isCurrentMonth = months[day.getMonth()] === month
-  const isCurrentDay = isSameDay(day, currentDate)
-  const isPreviousDay = !isAfter(day, currentDate)
+  const isCurrentDay = isSameDay(day, currentDate())
+  const isPreviousDay = !isAfter(day, currentDate())
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race

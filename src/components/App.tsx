@@ -1,5 +1,6 @@
 import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
+import Img from 'gatsby-image'
 import styled from 'styled-components'
 import { Footer } from './Footer'
 import { currentDate, parse } from '../services/dates'
@@ -20,7 +21,7 @@ const Title = styled.h1`
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.3rem;
 
-  img {
+  .gatsby-image-wrapper {
     width: 70px;
     vertical-align: middle;
     margin-right: 1rem;
@@ -40,19 +41,27 @@ const TopBar = styled.header`
 export function App() {
   const data = useStaticQuery(graphql`
     {
-      allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
+      calendars: allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
         nodes {
           internal {
             content
           }
         }
       }
+
+      f2Logo: file(relativePath: { eq: "F2-logo.png" }) {
+        childImageSharp {
+          fixed(width: 70) {
+            ...GatsbyImageSharpFixed
+          }
+        }
+      }
     }
   `)
 
-  const content = JSON.parse(data.allIcs.nodes[0].internal.content)
+  const content = JSON.parse(data.calendars.nodes[0].internal.content)
 
-  const calendarName = `Calendar ${currentDate.getFullYear()}`
+  const calendarName = `Calendar ${currentDate().getFullYear()}`
 
   function getDateKey(day: Date) {
     return day.getMonth() + ':' + day.getDate()
@@ -77,7 +86,7 @@ export function App() {
     <>
       <TopBar>
         <Title>
-          <img src="/images/F2-logo.png" />
+          <Img fixed={data.f2Logo.childImageSharp.fixed} alt="F2 Logo" />
           {calendarName}
         </Title>
       </TopBar>

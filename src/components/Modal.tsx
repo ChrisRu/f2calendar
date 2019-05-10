@@ -189,7 +189,7 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
             <span>{timeZone}</span>
           </StartTime>
           <p>{raceType}</p>
-          <img src={flagSrc} />
+          <img src={flagSrc} alt={countryCode + ' flag'} />
           <h4>{eventLocation}</h4>
           <span>{circuitName}</span>
           <Icon onClick={onClose}>

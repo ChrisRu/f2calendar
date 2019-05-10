@@ -9,6 +9,29 @@ module.exports = {
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-netlify`,
     `gatsby-transformer-ics`,
+    `gatsby-plugin-sharp`,
+    `gatsby-transformer-sharp`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `thumbnail`,
+        path: `${__dirname}/static/images/backgrounds/thumbnail`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `flags`,
+        path: `${__dirname}/static/images/flags`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `logos`,
+        path: `${__dirname}/static/images/logos`,
+      },
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
