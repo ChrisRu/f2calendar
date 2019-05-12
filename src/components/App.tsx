@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import Img from 'gatsby-image'
 import styled from 'styled-components'
@@ -39,6 +39,8 @@ const TopBar = styled.header`
 `
 
 export function App() {
+  const [calendarName, setCalendarName] = useState('Calendar')
+
   const data = useStaticQuery(graphql`
     {
       calendars: allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
@@ -61,7 +63,9 @@ export function App() {
 
   const content = JSON.parse(data.calendars.nodes[0].internal.content)
 
-  const calendarName = `Calendar ${currentDate().getFullYear()}`
+  useEffect(() => {
+    setCalendarName(`Calendar ${currentDate().getFullYear()}`)
+  }, [])
 
   function getDateKey(day: Date) {
     return day.getMonth() + ':' + day.getDate()

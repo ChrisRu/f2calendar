@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo, SyntheticEvent } from 'react'
+import React, { useState, useEffect, useRef, memo, SyntheticEvent } from 'react'
 import styled, { css } from 'styled-components'
 import { isSameDay, isAfter } from 'date-fns'
 import { months } from './util'
@@ -117,6 +117,8 @@ interface IProps {
 }
 
 function DayComponent({ month, day, events }: IProps) {
+  const [isCurrentDay, setCurrentDay] = useState(false)
+  const [isPreviousDay, setPreviousDay] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [popupLeft, setPopupLeft] = useState(false)
   const [popupTop, setPopupTop] = useState(false)
@@ -143,8 +145,16 @@ function DayComponent({ month, day, events }: IProps) {
   }
 
   const isCurrentMonth = months[day.getMonth()] === month
-  const isCurrentDay = isSameDay(day, currentDate())
-  const isPreviousDay = !isAfter(day, currentDate())
+
+  useEffect(() => {
+    if (isSameDay(day, currentDate())) {
+      setCurrentDay(true)
+    }
+
+    if (!isAfter(day, currentDate())) {
+      setPreviousDay(true)
+    }
+  }, [])
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race
