@@ -26,7 +26,7 @@ function parseValue(value: string) {
 }
 
 export function parseICS(fileContent: string) {
-  type Reducer = [ReadonlyArray<string | number>, any]
+  type Reducer = [(string | number)[], any]
 
   const [_, parsed] = unescapeFileContent(fileContent)
     .split('\n')

@@ -7,11 +7,11 @@ import { currentDate, parse } from '../services/dates'
 import { Calendar } from './Calendar'
 import { IPreEvent, IEvent } from '../services/calendar'
 
-function parseDate(event: IPreEvent, timeZone: string) {
+function parseDate(event: IPreEvent, timeZone: string): IEvent {
   return Object.assign(event, {
     DTSTART: parse(event.DTSTART, timeZone),
     DTEND: parse(event.DTEND, timeZone),
-  }) as IEvent
+  })
 }
 
 const Title = styled.h1`
@@ -71,16 +71,13 @@ export function App() {
     return day.getMonth() + ':' + day.getDate()
   }
 
-  const dayDictionary = (content.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
+  const dayDictionary = content.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
     parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
-  ) as IEvent[]).reduce(
-    (dict, nextDate) => {
-      const key = getDateKey(nextDate.DTSTART)
-      dict[key] = (dict[key] || []).concat(nextDate)
-      return dict
-    },
-    {} as { [x: string]: IEvent[] },
-  )
+  ).reduce((dict: { [x: string]: IEvent[] }, nextDate: IEvent) => {
+    const key = getDateKey(nextDate.DTSTART)
+    dict[key] = (dict[key] || []).concat(nextDate)
+    return dict
+  }, {})
 
   function getEvents(day: Date) {
     return dayDictionary[getDateKey(day)] || []

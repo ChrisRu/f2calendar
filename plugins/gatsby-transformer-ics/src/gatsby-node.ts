@@ -26,9 +26,9 @@ async function onCreateNode({
   const content = parseICS(rawContent)
 
   const newNode: any = {
-    id: createNodeId(`${node.id} >>> ICS`),
+    id: createNodeId(`${id} >>> ICS`),
     children: [],
-    parent: node.id,
+    parent: id,
     absolutePath: node.absolutePath,
     relativePath: typeof node.relativePath === 'string' ? node.relativePath : '',
     internal: {

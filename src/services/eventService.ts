@@ -5,17 +5,14 @@ export function groupEvents(events: IEvent[]) {
   return Object.values(
     events
       .filter(event => event.LOCATION)
-      .reduce(
-        (races, event) => {
-          const location = event.LOCATION || '_'
+      .reduce<{ [x: string]: IEvent[] }>((races, event) => {
+        const location = event.LOCATION || '_'
 
-          return {
-            ...races,
-            [location]: (races[location] || []).concat(event),
-          }
-        },
-        {} as { [x: string]: IEvent[] },
-      ),
+        return {
+          ...races,
+          [location]: (races[location] || []).concat(event),
+        }
+      }, {}),
   )
 }
 
