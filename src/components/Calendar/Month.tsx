@@ -73,6 +73,7 @@ export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
             {day.charAt(0)}
           </WeekDay>
         ))}
+        <br />
         {days.map(day => (
           <Day key={day.toString() + name} month={month} day={day} events={getEvents(day)} />
         ))}

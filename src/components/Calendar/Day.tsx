@@ -18,10 +18,9 @@ enum RaceType {
 export const WeekDay = styled.div`
   display: block;
   margin: 0.2em 0.5em 0;
-  width: 1.325em;
-  height: 1.325em;
-  line-height: 1.325em;
-  padding: 0.375em;
+  width: 1.3rem;
+  height: 1.3rem;
+  line-height: 1.3rem;
   float: left;
   color: #1e83c5;
   opacity: 0.5;
@@ -46,48 +45,64 @@ const DayWrapper = styled.div<{
   raceType?: RaceType
 }>`
   display: block;
+  position: relative;
   margin: 0.5em;
-  width: 1.25em;
-  height: 1.25em;
-  line-height: 1.25em;
-  padding: 0.375em;
-  font-weight: ${p => (p.active ? '600' : 'normal')};
-  color: ${p => (p.active ? '#fff' : p.happened ? '#DDD' : '#000')};
-  background: ${p => (p.active ? raceBg(p) : 'transparent')};
+  width: 1.3rem;
+  height: 1.3rem;
+  line-height: 1.3rem;
+  text-align: center;
+  font-weight: ${p => (p.active ? '600' : '600')};
+  color: ${p => (p.active ? '#fff' : '#000')};
   border-radius: 50%;
   float: left;
+  opacity: ${p => (!p.active && p.happened ? 0.25 : 1)};
 
   ${p => {
-    if (!p.hasEvent || p.active) {
-      return
+    if (p.active) {
+      return css`
+        &:before {
+          content: '';
+          display: block;
+          position: absolute;
+          z-index: -1;
+          top: -10%;
+          left: -10%;
+          width: 120%;
+          height: 120%;
+          background-color: ${raceBg(p)};
+          border-radius: 50%;
+        }
+      `
     }
+  }}
+  ${p => {
+    if (p.hasEvent && !p.active) {
+      return css`
+        cursor: pointer;
 
-    return css`
-      cursor: pointer;
+        &:hover {
+          opacity: 1;
 
-      &:hover {
-        color: #000;
+          &:after {
+            transform: translateY(-2px);
+          }
+        }
 
         &:after {
-          transform: translateY(2px);
-          opacity: 1;
+          content: '';
+          display: block;
+          position: relative;
+          bottom: -0.3em;
+          left: -10%;
+          width: 120%;
+          height: 3px;
+          background: ${raceBg(p)};
+          border-radius: 3rem;
+          transition: transform 0.1s;
         }
-      }
-
-      &:after {
-        opacity: ${p.happened ? 0.3 : 1};
-        content: '';
-        display: block;
-        position: relative;
-        bottom: -0.3em;
-        left: -0.4em;
-        width: 180%;
-        height: 3px;
-        background: ${raceBg(p)};
-        border-radius: 3rem;
-      }
-    `
-  }}
+      `
+    }
+  }};
 `
 
 interface IContentProps {
