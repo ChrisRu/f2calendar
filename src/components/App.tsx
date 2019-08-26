@@ -3,15 +3,19 @@ import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { Footer } from './Footer'
 import { parse } from '../services/dates'
-import { Calendar } from './Calendar'
+import { Year as Calendar } from './Calendar/Year'
 import { IPreEvent, IEvent } from '../services/calendar'
-import { Logo } from './Logo'
+import { Logo } from './Images/Logo'
 
 function parseDate(event: IPreEvent, timeZone: string): IEvent {
   return Object.assign(event, {
     DTSTART: parse(event.DTSTART, timeZone),
     DTEND: parse(event.DTEND, timeZone),
   })
+}
+
+function getDateKey(day: Date) {
+  return day.getMonth() + ':' + day.getDate()
 }
 
 const Title = styled.h1`
@@ -33,8 +37,8 @@ const Title = styled.h1`
 `
 
 const TopBar = styled.header`
-  margin: 2rem auto 1rem;
-  max-width: 1200px;
+  margin: 2rem auto;
+  max-width: 1225px;
   display: flex;
   padding: 0 2rem;
   flex-flow: row nowrap;
@@ -56,10 +60,6 @@ export function App() {
   `)
 
   const content = JSON.parse(data.calendars.nodes[0].internal.content)
-
-  function getDateKey(day: Date) {
-    return day.getMonth() + ':' + day.getDate()
-  }
 
   const dayDictionary = content.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
     parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone),

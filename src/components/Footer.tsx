@@ -1,43 +1,40 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Content = styled.p`
+const FooterWrapper = styled.footer`
   font-size: 0.9em;
-  max-width: 1200px;
-  margin: 2rem auto 5rem;
-  padding: 1rem 2rem;
+  margin: 2rem 0 5rem;
   text-align: center;
+  color: rgba(0, 0, 0, 0.7);
 
   p {
-    margin: 0;
+    margin: 0.3rem;
   }
-`
 
-const Link = styled.a`
-  color: #444;
+  a {
+    color: #444;
 
-  &:hover {
-    color: #000;
+    &:hover {
+      color: #000;
+    }
   }
 `
 
 export function Footer() {
   return (
-    <footer>
-      <Content>
-        <p>The way to find the FIA Formula 2 upcoming races, schedules and calendars.</p>
-        <p>
-          Crafted in 2019 by{' '}
-          <Link rel="noopener" target="_blank" href="https://ruigrok.info">
-            Christian Ruigrok
-          </Link>{' '}
-          with artwork from{' '}
-          <Link rel="noopener" target="_blank" href="https://pavelruzicka.com">
-            Pavel Růžička
-          </Link>
-          .
-        </p>
-      </Content>
-    </footer>
+    <FooterWrapper>
+      <p>The way to find the FIA Formula 2 upcoming races, schedules and calendars.</p>
+      <p>
+        Crafted in 2019 by{' '}
+        <a rel="noopener noreferrer" target="_blank" href="https://ruigrok.info">
+          Christian Ruigrok
+        </a>{' '}
+        with artwork from{' '}
+        <a rel="noopener noreferrer" target="_blank" href="https://pavelruzicka.com">
+          Pavel Růžička
+        </a>
+        .
+      </p>
+    </FooterWrapper>
   )
 }

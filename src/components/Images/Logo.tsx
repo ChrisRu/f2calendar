@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Logo = () => {
+export function Logo() {
   return (
     <svg viewBox="0 0 784 600" width="60" xmlns="http://www.w3.org/2000/svg">
       <defs>

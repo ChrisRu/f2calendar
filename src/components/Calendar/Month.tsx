@@ -12,7 +12,7 @@ const MonthWrapper = styled.div`
 `
 
 const DaysWrapper = styled.div`
-  width: ${3 * daysInTheWeek}em;
+  width: ${2.1 * daysInTheWeek}rem;
   text-align: center;
 `
 
@@ -73,7 +73,6 @@ export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
             {day.charAt(0)}
           </WeekDay>
         ))}
-        <br />
         {days.map(day => (
           <Day key={day.toString() + name} month={month} day={day} events={getEvents(day)} />
         ))}

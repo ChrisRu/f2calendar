@@ -1,11 +1,11 @@
 import React, { SyntheticEvent } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { CloseIcon } from './Icons'
+import { CloseIcon } from './Images/Icons'
 import { format } from 'date-fns'
 import { getCountryCode } from '../services/eventService'
 import { IEvent } from '../services/calendar'
 
-const Icon = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -60,7 +60,7 @@ const Card = styled.div<{ country?: string; popupLeft: boolean; popupTop: boolea
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  background-image: url(/images/backgrounds/thumbnail/${p => p.country}.jpg);
+  background-image: url('/images/backgrounds/thumbnail/${p => p.country}.jpg');
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-end;
@@ -192,9 +192,9 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
           <img src={flagSrc} alt={countryCode + ' flag'} />
           <h4>{eventLocation}</h4>
           <span>{circuitName}</span>
-          <Icon onClick={onClose}>
+          <IconWrapper onClick={onClose}>
             <CloseIcon />
-          </Icon>
+          </IconWrapper>
         </CardInfo>
       </Card>
     </Wrapper>

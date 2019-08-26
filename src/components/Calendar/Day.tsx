@@ -5,6 +5,7 @@ import { months } from './util'
 import { IEvent } from '../../services/calendar'
 import { currentDate } from '../../services/dates'
 import { Modal } from '../Modal'
+import { DayContent } from './DayContent';
 
 enum RaceType {
   Unknown,
@@ -104,25 +105,6 @@ const DayWrapper = styled.div<{
     }
   }};
 `
-
-interface IContentProps {
-  summary?: string
-  day: Date
-  isToday: boolean
-}
-
-function DayContent({ summary, day, isToday }: IContentProps) {
-  const dayNumber = day.getDate()
-  const title =
-    summary ||
-    day.toLocaleString('en-uk', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    })
-
-  return <span title={(isToday ? 'Today: ' : '') + title}>{dayNumber}</span>
-}
 
 interface IProps {
   day: Date
