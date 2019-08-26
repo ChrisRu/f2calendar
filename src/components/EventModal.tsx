@@ -4,6 +4,7 @@ import { CloseIcon } from './Images/Icons'
 import { format } from 'date-fns'
 import { getCountryCode } from '../services/eventService'
 import { IEvent } from '../services/calendar'
+import { ModalWrapper, Overlay } from '../styles/Modal'
 
 const IconWrapper = styled.div`
   position: absolute;
@@ -105,33 +106,6 @@ const CardInfo = styled.div`
   }
 `
 
-const Wrapper = styled.div`
-  position: absolute;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-
-  @media (max-width: 1000px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-`
-
-const FadeInAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-`
-
 const StartTime = styled.div`
   position: absolute;
   bottom: 1rem;
@@ -145,20 +119,6 @@ const StartTime = styled.div`
   }
 `
 
-const Overlay = styled.div`
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  animation-name: ${FadeInAnimation};
-  animation-duration: 0.1s;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-`
-
 interface IProps {
   event: IEvent
   popupLeft: boolean
@@ -166,7 +126,7 @@ interface IProps {
   onClose?: (event: SyntheticEvent) => void
 }
 
-export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
+export function EventModal({ event, onClose, popupLeft, popupTop }: IProps) {
   const countryCode = getCountryCode(event.LOCATION)
   const flagSrc = `/images/flags/${countryCode}.svg`
 
@@ -180,7 +140,7 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
   const localTime = format(event.DTSTART, 'HH:mm')
 
   return (
-    <Wrapper>
+    <ModalWrapper>
       <Overlay onClick={onClose} />
       <Card country={countryCode} popupLeft={popupLeft} popupTop={popupTop}>
         <CardInfo>
@@ -197,6 +157,6 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
           </IconWrapper>
         </CardInfo>
       </Card>
-    </Wrapper>
+    </ModalWrapper>
   )
 }

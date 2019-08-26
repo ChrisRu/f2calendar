@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface IContentProps {
+interface IProps {
   summary?: string
   day: Date
   isToday: boolean
 }
 
-export function DayContent({ summary, day, isToday }: IContentProps) {
+export function DayContent({ summary, day, isToday }: IProps) {
   const dayNumber = day.getDate()
   const title =
     summary ||

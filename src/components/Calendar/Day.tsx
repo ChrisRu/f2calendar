@@ -4,8 +4,8 @@ import { isSameDay, isAfter } from 'date-fns'
 import { months } from './util'
 import { IEvent } from '../../services/calendar'
 import { currentDate } from '../../services/dates'
-import { Modal } from '../Modal'
-import { DayContent } from './DayContent';
+import { EventModal } from '../EventModal'
+import { DayContent } from './DayContent'
 
 enum RaceType {
   Unknown,
@@ -179,10 +179,25 @@ function DayComponent({ month, day, events }: IProps) {
       onClick={events.length > 0 ? openEvent : undefined}
       raceType={raceType}
       ref={events.length > 0 ? dayRef : undefined}
+      tabIndex={events.length > 0 ? 0 : -1}
+      onKeyDown={event => {
+        if (events.length > 0 && event.key === 'Enter') {
+          openEvent(event)
+        }
+
+        if (event.key === 'Escape') {
+          closeEvent(event)
+        }
+      }}
     >
       <DayContent isToday={isCurrentDay} summary={events[0] && events[0].SUMMARY} day={day} />
-      {events.length > 0 && isOpen && (
-        <Modal event={events[0]} onClose={closeEvent} popupLeft={popupLeft} popupTop={popupTop} />
+      {isOpen && (
+        <EventModal
+          event={events[0]}
+          onClose={closeEvent}
+          popupLeft={popupLeft}
+          popupTop={popupTop}
+        />
       )}
     </DayWrapper>
   )

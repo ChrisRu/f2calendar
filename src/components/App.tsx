@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { Footer } from './Footer'
@@ -6,6 +6,8 @@ import { parse } from '../services/dates'
 import { Year as Calendar } from './Calendar/Year'
 import { IPreEvent, IEvent } from '../services/calendar'
 import { Logo } from './Images/Logo'
+import { CalendarIcon } from './Images/Icons'
+import { CalendarModal } from './CalendarModal'
 
 function parseDate(event: IPreEvent, timeZone: string): IEvent {
   return Object.assign(event, {
@@ -46,11 +48,46 @@ const TopBar = styled.header`
   justify-content: space-between;
 `
 
-export function App() {
+const CalendarButton = styled.button`
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  padding: 0.3em 0.8em;
+  background: #fff;
+  color: #555;
+  border-radius: 0.3em;
+  font-size: 0.8em;
+
+  span {
+    vertical-align: middle;
+  }
+
+  svg {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    width: 1.1rem;
+    stroke: #666;
+  }
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+`
+
+interface IProps {
+  host: string
+  protocol: string
+}
+
+export function App({ host, protocol }: IProps) {
+  const [calendarModalOpen, setOpenCalendarModal] = useState<boolean>(false)
+
   const data = useStaticQuery(graphql`
     {
       calendars: allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
         nodes {
+          relativePath {
+            relativePath
+          }
           internal {
             content
           }
@@ -80,9 +117,20 @@ export function App() {
           <Logo />
           <span>Calendar 2019</span>
         </Title>
+        <CalendarButton onClick={() => setOpenCalendarModal(true)}>
+          <CalendarIcon />
+          <span>Add to your own calendar</span>
+        </CalendarButton>
       </TopBar>
       <main>
         <Calendar getEvents={getEvents} />
+        {calendarModalOpen ? (
+          <CalendarModal
+            calendarLocation={`//${host}/calendars/${data.calendars.nodes[0].relativePath.relativePath}`}
+            protocol={protocol}
+            onClose={() => setOpenCalendarModal(false)}
+          />
+        ) : null}
       </main>
       <Footer />
     </>
