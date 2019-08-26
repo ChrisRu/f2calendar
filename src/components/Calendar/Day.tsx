@@ -17,18 +17,19 @@ enum RaceType {
 
 export const WeekDay = styled.div`
   display: block;
-  margin: 0.2em 0.584em -0.2em;
-  width: 1.2em;
-  height: 1.2em;
-  line-height: 1.2em;
-  padding: 0.567em;
+  margin: 0.2em 0.5em 0;
+  width: 1.325em;
+  height: 1.325em;
+  line-height: 1.325em;
+  padding: 0.375em;
   float: left;
   color: #1e83c5;
   opacity: 0.5;
   font-size: 0.75rem;
+  text-align: center;
 `
 
-const raceBg = ({ raceType }: { raceType: RaceType }) => {
+const raceBg = ({ raceType }: { raceType?: RaceType }) => {
   if (raceType === RaceType.PreSeason) return '#f69f2f'
   if (raceType === RaceType.FreePractice) return '#f69f2f'
   if (raceType === RaceType.Qualifying) return '#1e83c5'
@@ -39,21 +40,19 @@ const raceBg = ({ raceType }: { raceType: RaceType }) => {
 }
 
 const DayWrapper = styled.div<{
-  faded?: boolean
   happened?: boolean
   active?: boolean
   hasEvent?: boolean
-  raceType: RaceType
+  raceType?: RaceType
 }>`
   display: block;
   margin: 0.5em;
-  width: 1em;
-  height: 1em;
-  line-height: 1em;
-  padding: 0.5em;
-  font-weight: ${p => (p.active ? 'bold' : 'normal')};
-  color: ${p =>
-    p.active ? '#fff' : p.faded && p.happened ? '#DDD' : p.faded || p.happened ? '#AAA' : '#000'};
+  width: 1.25em;
+  height: 1.25em;
+  line-height: 1.25em;
+  padding: 0.375em;
+  font-weight: ${p => (p.active ? '600' : 'normal')};
+  color: ${p => (p.active ? '#fff' : p.happened ? '#DDD' : '#000')};
   background: ${p => (p.active ? raceBg(p) : 'transparent')};
   border-radius: 50%;
   float: left;
@@ -76,7 +75,7 @@ const DayWrapper = styled.div<{
       }
 
       &:after {
-        opacity: ${p.happened || p.faded ? 0.3 : 1};
+        opacity: ${p.happened ? 0.3 : 1};
         content: '';
         display: block;
         position: relative;
@@ -171,9 +170,12 @@ function DayComponent({ month, day, events }: IProps) {
     ? RaceType.PreSeason
     : RaceType.Unknown
 
+  if (!isCurrentMonth) {
+    return <DayWrapper />
+  }
+
   return (
     <DayWrapper
-      faded={!isCurrentMonth}
       happened={!isCurrentDay && isPreviousDay}
       active={isOpen || isCurrentDay}
       hasEvent={events.length > 0}

@@ -2,10 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Content = styled.p`
-  max-width: 1400px;
-  margin: 0 auto;
+  font-size: 0.9em;
+  max-width: 1200px;
+  margin: 2rem auto 5rem;
   padding: 1rem 2rem;
-  text-align: right;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
 `
 
 const Link = styled.a`
@@ -20,7 +25,18 @@ export function Footer() {
   return (
     <footer>
       <Content>
-        2019 by <Link href="https://ruigrok.info">Christian Ruigrok</Link>
+        <p>The way to find the FIA Formula 2 upcoming races, schedules and calendars.</p>
+        <p>
+          Crafted in 2019 by{' '}
+          <Link rel="noopener" target="_blank" href="https://ruigrok.info">
+            Christian Ruigrok
+          </Link>{' '}
+          with artwork from{' '}
+          <Link rel="noopener" target="_blank" href="https://pavelruzicka.com">
+            Pavel Růžička
+          </Link>
+          .
+        </p>
       </Content>
     </footer>
   )

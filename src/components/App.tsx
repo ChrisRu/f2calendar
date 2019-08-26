@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import Img from 'gatsby-image'
 import styled from 'styled-components'
 import { Footer } from './Footer'
-import { currentDate, parse } from '../services/dates'
+import { parse } from '../services/dates'
 import { Calendar } from './Calendar'
 import { IPreEvent, IEvent } from '../services/calendar'
+import { Logo } from './Logo'
 
 function parseDate(event: IPreEvent, timeZone: string): IEvent {
   return Object.assign(event, {
@@ -19,18 +19,22 @@ const Title = styled.h1`
   padding: 0;
   display: block;
   color: rgba(0, 0, 0, 0.7);
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 
-  .gatsby-image-wrapper {
-    width: 70px;
+  svg {
+    width: 3rem;
     vertical-align: middle;
-    margin-right: 1rem;
+  }
+
+  span {
+    margin-left: 1rem;
+    vertical-align: middle;
   }
 `
 
 const TopBar = styled.header`
   margin: 2rem auto 1rem;
-  max-width: 1400px;
+  max-width: 1200px;
   display: flex;
   padding: 0 2rem;
   flex-flow: row nowrap;
@@ -39,8 +43,6 @@ const TopBar = styled.header`
 `
 
 export function App() {
-  const [calendarName, setCalendarName] = useState('Calendar')
-
   const data = useStaticQuery(graphql`
     {
       calendars: allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
@@ -50,22 +52,10 @@ export function App() {
           }
         }
       }
-
-      f2Logo: file(relativePath: { eq: "F2-logo.png" }) {
-        childImageSharp {
-          fixed(width: 70) {
-            ...GatsbyImageSharpFixed
-          }
-        }
-      }
     }
   `)
 
   const content = JSON.parse(data.calendars.nodes[0].internal.content)
-
-  useEffect(() => {
-    setCalendarName(`Calendar ${currentDate().getFullYear()}`)
-  }, [])
 
   function getDateKey(day: Date) {
     return day.getMonth() + ':' + day.getDate()
@@ -87,8 +77,8 @@ export function App() {
     <>
       <TopBar>
         <Title>
-          <Img fixed={data.f2Logo.childImageSharp.fixed} alt="F2 Logo" />
-          {calendarName}
+          <Logo />
+          <span>Calendar 2019</span>
         </Title>
       </TopBar>
       <main>

@@ -1,7 +1,7 @@
-module.exports = {
+const config = {
   siteMetadata: {
-    name: `Formula 2 Calendar`,
-    tagline: `Keep track of when your (second) favorite racing series is live`,
+    name: `Formula 2 Calendar 2019`,
+    tagline: `Keep track of when FIA Formula 2 is live`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -28,22 +28,32 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `logos`,
-        path: `${__dirname}/static/images/logos`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
         name: `calendars`,
         path: `${__dirname}/static/calendars/`,
       },
     },
     {
-      resolve: `gatsby-plugin-google-analytics`,
+      resolve: `gatsby-plugin-manifest`,
       options: {
-        trackingId: 'UA-58105551-2',
+        name: `Formula 2 Calendar 2019`,
+        short_name: `F2 Calendar`,
+        start_url: `/`,
+        background_color: `#1f4c86`,
+        theme_color: `#1f4c86`,
+        display: `minimal-ui`,
+        icon: `static/images/f2-logo.png`,
       },
     },
   ],
 }
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push({
+    resolve: `gatsby-plugin-google-analytics`,
+    options: {
+      trackingId: 'UA-58105551-2',
+    },
+  })
+}
+
+module.exports = config
