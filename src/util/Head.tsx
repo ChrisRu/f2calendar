@@ -21,7 +21,7 @@ export function Head() {
       <link rel="manifest" href="/manifest.json" />
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Red+Hat+Display:400,600&display=swap"
+        href="https://fonts.googleapis.com/css?family=Red+Hat+Display:500,700&display=swap"
       />
     </Helmet>
   )

@@ -51,7 +51,7 @@ const DayWrapper = styled.div<{
   height: 1.3rem;
   line-height: 1.3rem;
   text-align: center;
-  font-weight: ${p => (p.active ? '600' : '600')};
+  font-weight: ${p => (p.active ? '700' : '500')};
   color: ${p => (p.active ? '#fff' : '#000')};
   border-radius: 50%;
   float: left;

@@ -101,7 +101,7 @@ const CardInfo = styled.div`
     opacity: 0.7;
     display: block;
     margin-left: 2.5rem;
-    margin-top: 0.4rem;
+    margin-top: 0.2rem;
   }
 `
 
@@ -139,7 +139,7 @@ const StartTime = styled.div`
   z-index: 1;
 
   span {
-    margin: 0.1rem 0 0;
+    margin: 0;
     text-align: center;
     display: block;
   }
@@ -186,7 +186,7 @@ export function Modal({ event, onClose, popupLeft, popupTop }: IProps) {
         <CardInfo>
           <StartTime>
             <span>{duration === 0 ? 'unknown' : localTime}</span>
-            <span>{timeZone}</span>
+            <span>{timeZone.split('/').pop()}</span>
           </StartTime>
           <p>{raceType}</p>
           <img src={flagSrc} alt={countryCode + ' flag'} />
