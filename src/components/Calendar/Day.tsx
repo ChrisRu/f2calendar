@@ -92,7 +92,7 @@ const DayWrapper = styled.div<{
           content: '';
           display: block;
           position: relative;
-          bottom: -0.3em;
+          bottom: -0.05rem;
           left: -10%;
           width: 120%;
           height: 3px;
