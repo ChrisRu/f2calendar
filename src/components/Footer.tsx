@@ -23,7 +23,7 @@ const FooterWrapper = styled.footer`
 export function Footer() {
   return (
     <FooterWrapper>
-      <p>Your way of finding FIA&nbsp;Formula&nbsp;2 upcoming races, schedules and calendars.</p>
+      <p>Your way of finding FIA&nbsp;Formula&nbsp;2 upcoming races, schedules, and calendars.</p>
       <p>
         Crafted in 2019 by{' '}
         <a rel="noopener noreferrer" target="_blank" href="https://ruigrok.info">
