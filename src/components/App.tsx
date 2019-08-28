@@ -46,6 +46,10 @@ const TopBar = styled.header`
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `
 
 const CalendarButton = styled.button`
@@ -70,6 +74,10 @@ const CalendarButton = styled.button`
 
   &:hover {
     border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 600px) {
+    margin-top: 1rem;
   }
 `
 
