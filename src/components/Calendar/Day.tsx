@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 import { isSameDay, isBefore } from 'date-fns'
 import { months } from './constants'
 import { IEvent } from '../../services/calendar'
-import { currentDate } from '../../services/dates'
 import { EventModal } from '../Modals/EventModal'
 
 enum RaceType {
@@ -142,8 +141,8 @@ function DayComponent({ month, day, events }: IProps) {
     setOpen(false)
   }
 
-  const isCurrentDay = isClient && isSameDay(day, currentDate)
-  const isPreviousDay = !isClient || isBefore(day, currentDate)
+  const isCurrentDay = isClient && isSameDay(day, new Date())
+  const isPreviousDay = !isClient || isBefore(day, new Date())
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race

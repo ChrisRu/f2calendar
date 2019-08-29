@@ -1,14 +1,4 @@
-export interface ICalendar<T extends IGenericEvent> {
-  PRODID?: string
-  VERSION?: string
-  CALSCALE: 'string'
-  METHOD?: string
-  'X-WR-CALNAME'?: string
-  'X-WR-TIMEZONE': string
-  VEVENT: T[]
-}
-
-export interface IGenericEvent {
+export interface IEventBase {
   UID?: string
   DESCRIPTION: string
   'X-WINNER'?: string
@@ -19,7 +9,7 @@ export interface IGenericEvent {
   TRANSP: string
 }
 
-export interface IPreEvent extends IGenericEvent {
+export interface IServerEvent extends IEventBase {
   DTSTART: string
   DTEND: string
   DTSTAMP: string
@@ -27,7 +17,7 @@ export interface IPreEvent extends IGenericEvent {
   'LAST-MODIFIED': string
 }
 
-export interface IEvent extends IGenericEvent {
+export interface IEvent extends IEventBase {
   DTSTART: Date
   DTEND: Date
   DTSTAMP: string

@@ -1,13 +1,13 @@
 import React from 'react'
-import { Head } from '../util/Head'
-import { GlobalStyle } from '../util/GlobalStyle'
-import { App } from '../components/App'
 import { PageRendererProps } from 'gatsby'
+import { Head } from '../components/Head'
+import { GlobalStyle } from '../styles/GlobalStyle'
+import { App } from '../components/App'
 
 export default ({ location }: PageRendererProps) => (
   <>
-    <GlobalStyle />
     <Head />
-    <App host={location.host} protocol={location.protocol} />
+    <GlobalStyle />
+    <App location={location} />
   </>
 )

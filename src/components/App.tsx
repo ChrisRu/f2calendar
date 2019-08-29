@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { Footer } from './Footer'
-import { parse } from '../services/dates'
 import { Year as Calendar } from './Calendar/Year'
-import { IPreEvent, IEvent } from '../services/calendar'
+import { IServerEvent, IEvent } from '../services/calendar'
 import { Logo } from './Images/Logo'
 import { CalendarIcon } from './Images/Icons'
 import { CalendarModal } from './Modals/CalendarModal'
+import { utcToZonedTime } from 'date-fns-tz'
+import { WindowLocation } from '@reach/router'
 
-function parseDate(event: IPreEvent, timeZone: string): IEvent {
+function transformDates(event: IServerEvent, timeZone: string): IEvent {
   return Object.assign(event, {
-    DTSTART: parse(event.DTSTART, timeZone),
-    DTEND: parse(event.DTEND, timeZone),
+    DTSTART: utcToZonedTime(event.DTSTART, timeZone),
+    DTEND: utcToZonedTime(event.DTEND, timeZone),
   })
 }
 
@@ -82,13 +83,11 @@ const CalendarButton = styled.button`
 `
 
 interface IProps {
-  host: string
-  protocol: string
+  location: WindowLocation
 }
 
-export function App({ host, protocol }: IProps) {
+export function App({ location }: IProps) {
   const [calendarModalOpen, setOpenCalendarModal] = useState<boolean>(false)
-
   const data = useStaticQuery(graphql`
     {
       calendars: allIcs(filter: { relativePath: { name: { eq: "f2_calendar" } } }) {
@@ -105,9 +104,10 @@ export function App({ host, protocol }: IProps) {
   `)
 
   const content = JSON.parse(data.calendars.nodes[0].internal.content)
+  const calendarPath = data.calendars.nodes[0].relativePath.relativePath
 
-  const dayDictionary = content.VCALENDAR[0].VEVENT.map((date: IPreEvent) =>
-    parseDate(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
+  const dayDictionary = content.VCALENDAR[0].VEVENT.map((date: IServerEvent) =>
+    transformDates(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
   ).reduce((dict: { [x: string]: IEvent[] }, nextDate: IEvent) => {
     const key = getDateKey(nextDate.DTSTART)
     dict[key] = (dict[key] || []).concat(nextDate)
@@ -134,8 +134,8 @@ export function App({ host, protocol }: IProps) {
         <Calendar getEvents={getEvents} />
         {calendarModalOpen ? (
           <CalendarModal
-            calendarLocation={`//${host}/calendars/${data.calendars.nodes[0].relativePath.relativePath}`}
-            protocol={protocol}
+            calendarLocation={`//${location.host}/calendars/${calendarPath}`}
+            protocol={location.protocol}
             onClose={() => setOpenCalendarModal(false)}
           />
         ) : null}
