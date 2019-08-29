@@ -1,4 +1,3 @@
-// from https://f2fanatic.wordpress.com/interactive-calendar/
 export interface ICalendar<T extends IGenericEvent> {
   PRODID?: string
   VERSION?: string

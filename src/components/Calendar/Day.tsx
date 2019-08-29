@@ -122,7 +122,7 @@ function DayComponent({ month, day, events }: IProps) {
     return <DayWrapper />
   }
 
-  function getPosition() {
+  function setPopupPosition() {
     if (dayRef.current) {
       const { left, right, top, bottom } = dayRef.current.getBoundingClientRect()
 
@@ -133,7 +133,7 @@ function DayComponent({ month, day, events }: IProps) {
 
   function openEvent(event: SyntheticEvent) {
     event.stopPropagation()
-    getPosition()
+    setPopupPosition()
     setOpen(true)
   }
 
@@ -141,8 +141,9 @@ function DayComponent({ month, day, events }: IProps) {
     event.stopPropagation()
     setOpen(false)
   }
-  const isCurrentDay = isClient && isSameDay(day, currentDate())
-  const isPreviousDay = !isClient || isBefore(day, currentDate())
+
+  const isCurrentDay = isClient && isSameDay(day, currentDate)
+  const isPreviousDay = !isClient || isBefore(day, currentDate)
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race
