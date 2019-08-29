@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, memo, SyntheticEvent } from 'react'
+import React, { useState, useRef, memo, SyntheticEvent, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { isSameDay, isAfter } from 'date-fns'
-import { months } from './util'
+import { isSameDay, isBefore } from 'date-fns'
+import { months } from './constants'
 import { IEvent } from '../../services/calendar'
 import { currentDate } from '../../services/dates'
-import { EventModal } from '../EventModal'
-import { DayContent } from './DayContent'
+import { EventModal } from '../Modals/EventModal'
 
 enum RaceType {
   Unknown,
@@ -74,10 +73,7 @@ const DayWrapper = styled.div<{
           border-radius: 50%;
         }
       `
-    }
-  }}
-  ${p => {
-    if (p.hasEvent && !p.active) {
+    } else if (p.hasEvent) {
       return css`
         cursor: pointer;
 
@@ -113,12 +109,18 @@ interface IProps {
 }
 
 function DayComponent({ month, day, events }: IProps) {
-  const [isCurrentDay, setCurrentDay] = useState(false)
-  const [isPreviousDay, setPreviousDay] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [popupLeft, setPopupLeft] = useState(false)
   const [popupTop, setPopupTop] = useState(false)
   const dayRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => setIsClient(true), [])
+
+  const isCurrentMonth = months[day.getMonth()] === month
+  if (!isCurrentMonth) {
+    return <DayWrapper />
+  }
 
   function getPosition() {
     if (dayRef.current) {
@@ -139,18 +141,8 @@ function DayComponent({ month, day, events }: IProps) {
     event.stopPropagation()
     setOpen(false)
   }
-
-  const isCurrentMonth = months[day.getMonth()] === month
-
-  useEffect(() => {
-    if (isSameDay(day, currentDate())) {
-      setCurrentDay(true)
-    }
-
-    if (!isAfter(day, currentDate())) {
-      setPreviousDay(true)
-    }
-  }, [])
+  const isCurrentDay = isClient && isSameDay(day, currentDate())
+  const isPreviousDay = !isClient || isBefore(day, currentDate())
 
   const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
   const raceType = !race
@@ -167,9 +159,14 @@ function DayComponent({ month, day, events }: IProps) {
     ? RaceType.PreSeason
     : RaceType.Unknown
 
-  if (!isCurrentMonth) {
-    return <DayWrapper />
-  }
+  const dayNumber = day.getDate()
+  const title =
+    (events[0] && events[0].SUMMARY) ||
+    day.toLocaleString('en-uk', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
 
   return (
     <DayWrapper
@@ -190,7 +187,7 @@ function DayComponent({ month, day, events }: IProps) {
         }
       }}
     >
-      <DayContent isToday={isCurrentDay} summary={events[0] && events[0].SUMMARY} day={day} />
+      <span title={(isCurrentDay ? 'Today: ' : '') + title}>{dayNumber}</span>
       {isOpen && (
         <EventModal
           event={events[0]}

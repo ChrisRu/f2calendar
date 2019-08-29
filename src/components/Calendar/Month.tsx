@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { addDays } from 'date-fns'
-import { months, weeks } from './util'
+import { weeks } from './constants'
 import { Day, WeekDay } from './Day'
 import { IEvent } from '../../services/calendar'
 
@@ -50,19 +50,22 @@ export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
     .reduce(
       (month, day, index, arr) => {
         if (index === 0) {
-          return [...prefixMonthDays(day), day]
+          month = prefixMonthDays(day)
+          month.push(day)
+          return month
         }
 
         if (index === arr.length - 1 && (month.length + 1) % daysInTheWeek !== 0) {
-          return [...month, day, ...postfixMonthDays(index, month.length)]
+          month.push(day)
+          month.concat(postfixMonthDays(index, month.length - 1))
+          return month
         }
 
-        return [...month, day]
+        month.push(day)
+        return month
       },
-      [] as (Date)[],
+      [] as Date[],
     )
-
-  const month = months[startDate.getMonth()]
 
   return (
     <MonthWrapper>
@@ -74,7 +77,7 @@ export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
           </WeekDay>
         ))}
         {days.map(day => (
-          <Day key={day.toString() + name} month={month} day={day} events={getEvents(day)} />
+          <Day key={day.toString()} month={name} day={day} events={getEvents(day)} />
         ))}
       </DaysWrapper>
     </MonthWrapper>

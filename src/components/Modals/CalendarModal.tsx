@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ModalWrapper, Overlay } from '../styles/Modal'
+import { ModalWrapper, Overlay } from '../../styles/Modal'
 
 const CalendarModalWrapper = styled(ModalWrapper)`
   top: 0;

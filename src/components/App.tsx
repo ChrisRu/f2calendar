@@ -7,7 +7,7 @@ import { Year as Calendar } from './Calendar/Year'
 import { IPreEvent, IEvent } from '../services/calendar'
 import { Logo } from './Images/Logo'
 import { CalendarIcon } from './Images/Icons'
-import { CalendarModal } from './CalendarModal'
+import { CalendarModal } from './Modals/CalendarModal'
 
 function parseDate(event: IPreEvent, timeZone: string): IEvent {
   return Object.assign(event, {

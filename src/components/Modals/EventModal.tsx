@@ -1,10 +1,10 @@
 import React, { SyntheticEvent } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { CloseIcon } from './Images/Icons'
+import { CloseIcon } from '../Images/Icons'
 import { format } from 'date-fns'
-import { getCountryCode } from '../services/eventService'
-import { IEvent } from '../services/calendar'
-import { ModalWrapper, Overlay } from '../styles/Modal'
+import { getCountryCode } from '../../services/eventService'
+import { IEvent } from '../../services/calendar'
+import { ModalWrapper, Overlay } from '../../styles/Modal'
 
 const IconWrapper = styled.div`
   position: absolute;

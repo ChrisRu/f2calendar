@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { months } from './util'
+import { months } from './constants'
 import { Month } from './Month'
 import { IEvent } from '../../services/calendar'
 import { addMonths, getDaysInMonth } from 'date-fns'
@@ -28,11 +28,11 @@ export function Year({ getEvents }: IProps) {
 
         return (
           <Month
-            getEvents={getEvents}
             key={startDate.getMonth()}
             name={month}
-            dayAmount={getDaysInMonth(startDate)}
             startDate={startDate}
+            dayAmount={getDaysInMonth(startDate)}
+            getEvents={getEvents}
           />
         )
       })}
