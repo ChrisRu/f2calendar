@@ -9,6 +9,7 @@ import { CalendarIcon } from './Images/Icons'
 import { CalendarModal } from './Modals/CalendarModal'
 import { utcToZonedTime } from 'date-fns-tz'
 import { WindowLocation } from '@reach/router'
+import { CountDown } from './Calendar/CountDown'
 
 function transformDates(event: IServerEvent, timeZone: string): IEvent {
   return Object.assign(event, {
@@ -27,6 +28,7 @@ const Title = styled.h1`
   display: block;
   color: rgba(0, 0, 0, 0.7);
   font-size: 1.1rem;
+  white-space: nowrap;
 
   svg {
     width: 3rem;
@@ -37,23 +39,36 @@ const Title = styled.h1`
     margin-left: 1rem;
     vertical-align: middle;
   }
+
+  @media (max-width: 500px) {
+    grid-column: 1 / 3;
+    text-align: center;
+  }
 `
 
 const TopBar = styled.header`
   margin: 2rem auto;
   max-width: 1225px;
-  display: flex;
   padding: 0 2rem;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
 
-  @media (max-width: 600px) {
-    flex-direction: column;
+  @media (max-width: 1200px) {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+  }
+
+  @media (max-width: 800px) {
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 500px) {
+    grid-template-rows: auto auto auto;
   }
 `
 
 const CalendarButton = styled.button`
+  margin: 0 auto;
   box-sizing: border-box;
   border: 2px solid rgba(0, 0, 0, 0.05);
   padding: 0.3em 0.8em;
@@ -78,8 +93,16 @@ const CalendarButton = styled.button`
     border-color: rgba(0, 0, 0, 0.1);
   }
 
-  @media (max-width: 600px) {
-    margin-top: 1rem;
+  @media (max-width: 1200px) {
+    margin-right: 0;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  @media (max-width: 500px) {
+    margin: 2rem auto 0;
+    grid-row: initial;
+    grid-column: 1 / 3;
   }
 `
 
@@ -87,7 +110,7 @@ const NewLabel = styled.div`
   position: absolute;
   right: -1em;
   top: -1.3em;
-  background: #1283e3;
+  background: linear-gradient(to right, #318bc4, #1f5993);
   padding: 0.2rem 0.5rem;
   border-radius: 5rem;
   font-size: 0.7rem;
@@ -138,10 +161,11 @@ export function App({ location }: IProps) {
           <Logo />
           <span>Calendar 2019</span>
         </Title>
+        <CountDown events={content.VCALENDAR[0].VEVENT} />
         <CalendarButton onClick={() => setOpenCalendarModal(true)}>
           <CalendarIcon />
           <span>Add to your own calendar</span>
-          <NewLabel>NEW!</NewLabel>
+          <NewLabel>NEW</NewLabel>
         </CalendarButton>
       </TopBar>
       <main>
