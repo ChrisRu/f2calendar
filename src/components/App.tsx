@@ -61,6 +61,7 @@ const CalendarButton = styled.button`
   color: #555;
   border-radius: 0.3em;
   font-size: 0.8em;
+  position: relative;
 
   span {
     vertical-align: middle;
@@ -80,6 +81,18 @@ const CalendarButton = styled.button`
   @media (max-width: 600px) {
     margin-top: 1rem;
   }
+`
+
+const NewLabel = styled.div`
+  position: absolute;
+  right: -1em;
+  top: -1.3em;
+  background: #1283e3;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #fff;
 `
 
 interface IProps {
@@ -128,6 +141,7 @@ export function App({ location }: IProps) {
         <CalendarButton onClick={() => setOpenCalendarModal(true)}>
           <CalendarIcon />
           <span>Add to your own calendar</span>
+          <NewLabel>NEW!</NewLabel>
         </CalendarButton>
       </TopBar>
       <main>
