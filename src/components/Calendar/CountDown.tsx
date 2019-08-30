@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IEvent } from '../../services/calendar'
 import { formatDistance, isAfter, closestIndexTo } from 'date-fns'
 import styled from 'styled-components'
+import { isBefore } from 'date-fns/esm'
 
 interface IProps {
   events: IEvent[]
@@ -28,13 +29,25 @@ export function CountDown({ events }: IProps) {
   useEffect(() => setIsClient(true), [])
 
   const currentDate = new Date()
-  const upcomingEvents = events.filter(event => isAfter(event.DTSTART, currentDate))
+  const upcomingEvents = events.filter(event => isAfter(event.DTEND, currentDate))
   const closestEventIndex = closestIndexTo(currentDate, upcomingEvents.map(event => event.DTSTART))
   const nextEvent = upcomingEvents[closestEventIndex]
   const distance = formatDistance(nextEvent.DTSTART, currentDate)
 
   if (!isClient) {
     return <CountDownText />
+  }
+
+  const isNow = isBefore(currentDate, nextEvent.DTEND) && isAfter(currentDate, nextEvent.DTSTART)
+  if (isNow) {
+    return (
+      <CountDownText>
+        Now live!
+        <span>
+          {nextEvent.SUMMARY} at {nextEvent.LOCATION}
+        </span>
+      </CountDownText>
+    )
   }
 
   return (
