@@ -28,7 +28,7 @@ function parseValue(value: string) {
 export function parseICS(fileContent: string) {
   type Reducer = [(string | number)[], any]
 
-  const [_, parsed] = unescapeFileContent(fileContent)
+  const [, parsed] = unescapeFileContent(fileContent)
     .split('\n')
     .map(line => line.trim())
     .filter(line => line)

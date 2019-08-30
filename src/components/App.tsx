@@ -9,7 +9,6 @@ import { CalendarIcon } from './Images/Icons'
 import { CalendarModal } from './Modals/CalendarModal'
 import { CountDown } from './Calendar/CountDown'
 import { Year as Calendar } from './Calendar/Year'
-import { NotificationButton } from './NotificationButton'
 
 const Title = styled.h1`
   margin: 0;
@@ -142,7 +141,6 @@ export function App({ location }: IProps) {
         <Title>
           <Logo />
           <span>Calendar 2019</span>
-          {/* <NotificationButton events={content.VCALENDAR[0].VEVENT} /> */}
         </Title>
         <CountDown events={content.VCALENDAR[0].VEVENT} />
         <CalendarButton onClick={() => setOpenCalendarModal(true)}>

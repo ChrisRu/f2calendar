@@ -29,7 +29,7 @@ export function getCountryCode(raceDescription?: string) {
     return ''
   }
 
-  const [_, countryCode] = race
+  const [, countryCode] = race
 
   return countryCode
 }

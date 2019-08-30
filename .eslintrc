@@ -18,7 +18,7 @@
     "plugin:react/recommended"
   ],
   "rules": {
-    "no-console": 1,
+    "no-console": 0,
     "no-useless-escape": 0,
     "prettier/prettier": "warn",
     "react/display-name": 0,
