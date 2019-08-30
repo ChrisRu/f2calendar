@@ -1,9 +1,9 @@
 import React, { SyntheticEvent } from 'react'
 import styled, { keyframes } from 'styled-components'
+import format from 'date-fns/format'
 import { CloseIcon } from '../Images/Icons'
-import { format } from 'date-fns'
 import { getCountryCode } from '../../services/eventService'
-import { IEvent } from '../../services/calendar'
+import { IEvent, getTimezone } from '../../services/calendarService'
 import { ModalWrapper, Overlay } from '../../styles/Modal'
 
 const IconWrapper = styled.div`
@@ -136,7 +136,7 @@ export function EventModal({ event, onClose, popupLeft, popupTop }: IProps) {
   const raceType = event.SUMMARY ? event.SUMMARY.split(' (')[0] : 'Unknown Race'
   const duration = event.DTSTART.valueOf() - event.DTEND.valueOf()
 
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const timeZone = getTimezone()
   const localTime = format(event.DTSTART, 'HH:mm')
 
   return (
@@ -146,7 +146,7 @@ export function EventModal({ event, onClose, popupLeft, popupTop }: IProps) {
         <CardInfo>
           <StartTime>
             <span>{duration === 0 ? 'unknown' : localTime}</span>
-            <span>{timeZone.split('/').pop()}</span>
+            <span>{timeZone}</span>
           </StartTime>
           <p>{raceType}</p>
           <img src={flagSrc} alt={countryCode + ' flag'} />

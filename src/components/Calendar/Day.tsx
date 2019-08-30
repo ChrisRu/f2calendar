@@ -1,8 +1,9 @@
 import React, { useState, useRef, memo, SyntheticEvent, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { isSameDay, isBefore } from 'date-fns'
+import isSameDay from 'date-fns/isSameDay'
+import isBefore from 'date-fns/isBefore'
 import { months } from './constants'
-import { IEvent } from '../../services/calendar'
+import { IEvent } from '../../services/calendarService'
 import { EventModal } from '../Modals/EventModal'
 
 enum RaceType {

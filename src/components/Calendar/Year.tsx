@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import addMonths from 'date-fns/addMonths'
+import getDaysInMonth from 'date-fns/getDaysInMonth'
 import { months } from './constants'
 import { Month } from './Month'
-import { IEvent } from '../../services/calendar'
-import { addMonths, getDaysInMonth } from 'date-fns'
+import { IEvent } from '../../services/calendarService'
 
 const YearWrapper = styled.div`
   display: flex;

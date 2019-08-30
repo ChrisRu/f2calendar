@@ -1,26 +1,15 @@
 import React, { useState } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
+import { WindowLocation } from '@reach/router'
 import { Footer } from './Footer'
-import { Year as Calendar } from './Calendar/Year'
-import { IServerEvent, IEvent } from '../services/calendar'
+import { calendarToDictionary, getDateKey } from '../services/calendarService'
 import { Logo } from './Images/Logo'
 import { CalendarIcon } from './Images/Icons'
 import { CalendarModal } from './Modals/CalendarModal'
-import { utcToZonedTime } from 'date-fns-tz'
-import { WindowLocation } from '@reach/router'
 import { CountDown } from './Calendar/CountDown'
-
-function transformDates(event: IServerEvent, timeZone: string): IEvent {
-  return Object.assign(event, {
-    DTSTART: utcToZonedTime(event.DTSTART, timeZone),
-    DTEND: utcToZonedTime(event.DTEND, timeZone),
-  })
-}
-
-function getDateKey(day: Date) {
-  return day.getMonth() + ':' + day.getDate()
-}
+import { Year as Calendar } from './Calendar/Year'
+import { NotificationButton } from './NotificationButton'
 
 const Title = styled.h1`
   margin: 0;
@@ -141,14 +130,7 @@ export function App({ location }: IProps) {
 
   const content = JSON.parse(data.calendars.nodes[0].internal.content)
   const calendarPath = data.calendars.nodes[0].relativePath.relativePath
-
-  const dayDictionary = content.VCALENDAR[0].VEVENT.map((date: IServerEvent) =>
-    transformDates(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
-  ).reduce((dict: { [x: string]: IEvent[] }, nextDate: IEvent) => {
-    const key = getDateKey(nextDate.DTSTART)
-    dict[key] = (dict[key] || []).concat(nextDate)
-    return dict
-  }, {})
+  const dayDictionary = calendarToDictionary(content.VCALENDAR[0])
 
   function getEvents(day: Date) {
     return dayDictionary[getDateKey(day)] || []
@@ -160,6 +142,7 @@ export function App({ location }: IProps) {
         <Title>
           <Logo />
           <span>Calendar 2019</span>
+          {/* <NotificationButton events={content.VCALENDAR[0].VEVENT} /> */}
         </Title>
         <CountDown events={content.VCALENDAR[0].VEVENT} />
         <CalendarButton onClick={() => setOpenCalendarModal(true)}>
@@ -168,6 +151,7 @@ export function App({ location }: IProps) {
           <NewLabel>NEW</NewLabel>
         </CalendarButton>
       </TopBar>
+
       <main>
         <Calendar getEvents={getEvents} />
         {calendarModalOpen ? (

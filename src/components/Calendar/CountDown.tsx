@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { IEvent } from '../../services/calendar'
-import { formatDistance, isAfter, closestIndexTo } from 'date-fns'
 import styled from 'styled-components'
-import { isBefore } from 'date-fns/esm'
+import formatDistance from 'date-fns/formatDistance'
+import isAfter from 'date-fns/isAfter'
+import isBefore from 'date-fns/isBefore'
+import { IEvent } from '../../services/calendarService'
+import { getNextEvent } from '../../services/eventService'
 
 interface IProps {
   events: IEvent[]
@@ -28,16 +30,12 @@ export function CountDown({ events }: IProps) {
   const [isClient, setIsClient] = useState(false)
   useEffect(() => setIsClient(true), [])
 
-  const currentDate = new Date()
-  const upcomingEvents = events.filter(event => isAfter(event.DTEND, currentDate))
-  const closestEventIndex = closestIndexTo(currentDate, upcomingEvents.map(event => event.DTSTART))
-  const nextEvent = upcomingEvents[closestEventIndex]
-  const distance = formatDistance(nextEvent.DTSTART, currentDate)
-
-  if (!isClient) {
+  const nextEvent = getNextEvent(events)
+  if (!isClient || nextEvent === undefined) {
     return <CountDownText />
   }
 
+  const currentDate = new Date()
   const isNow = isBefore(currentDate, nextEvent.DTEND) && isAfter(currentDate, nextEvent.DTSTART)
   if (isNow) {
     return (
@@ -50,6 +48,7 @@ export function CountDown({ events }: IProps) {
     )
   }
 
+  const distance = formatDistance(nextEvent.DTSTART, currentDate)
   return (
     <CountDownText>
       Next event in {distance}

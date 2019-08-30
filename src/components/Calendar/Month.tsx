@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { addDays } from 'date-fns'
+import addDays from 'date-fns/addDays'
 import { weeks } from './constants'
 import { Day, WeekDay } from './Day'
-import { IEvent } from '../../services/calendar'
+import { IEvent } from '../../services/calendarService'
 
 const daysInTheWeek = 7
 

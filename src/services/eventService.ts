@@ -1,3 +1,7 @@
+import isAfter from 'date-fns/isAfter'
+import closestIndexTo from 'date-fns/closestIndexTo'
+import { IEvent } from './calendarService'
+
 const countryData = [
   ['Bahrain', 'SA'],
   ['Baku', 'AZ'],
@@ -28,4 +32,11 @@ export function getCountryCode(raceDescription?: string) {
   const [_, countryCode] = race
 
   return countryCode
+}
+
+export function getNextEvent(events: IEvent[]): IEvent | undefined {
+  const currentDate = new Date()
+  const upcomingEvents = events.filter(event => isAfter(event.DTEND, currentDate))
+  const closestEventIndex = closestIndexTo(currentDate, upcomingEvents.map(event => event.DTSTART))
+  return upcomingEvents[closestEventIndex]
 }
