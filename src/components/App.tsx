@@ -143,7 +143,14 @@ export function App({ location }: IProps) {
           <span>Calendar 2019</span>
         </Title>
         <CountDown events={content.VCALENDAR[0].VEVENT} />
-        <CalendarButton onClick={() => setOpenCalendarModal(true)}>
+        <CalendarButton
+          onKeyDown={event => {
+            if (event.key === 'Escape') {
+              setOpenCalendarModal(false)
+            }
+          }}
+          onClick={() => setOpenCalendarModal(true)}
+        >
           <CalendarIcon />
           <span>Add to your own calendar</span>
           <NewLabel>NEW</NewLabel>
