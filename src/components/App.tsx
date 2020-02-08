@@ -128,8 +128,6 @@ export function App({ location }: IProps) {
     const events = content.VEVENT.map(transformDates)
     const dayDictionary = calendarToDictionary(events)
 
-    console.log(dayDictionary)
-
     return [calendarPath, events, dayDictionary]
   }, [data])
 

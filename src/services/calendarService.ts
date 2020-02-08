@@ -45,7 +45,6 @@ export function transformDates(event: IServerEvent): IEvent {
 }
 
 export function getDateKey(day: Date) {
-  console.log(day)
   return day.toISOString().slice(0, 10)
 }
 
