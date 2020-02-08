@@ -16,11 +16,12 @@ const YearWrapper = styled.div`
 `
 
 interface IProps {
+  year: number
   getEvents: (day: Date) => IEvent[]
 }
 
-export function Year({ getEvents }: IProps) {
-  const firstDay = new Date('2019/01/01')
+export function Year({ year, getEvents }: IProps) {
+  const firstDay = new Date(year, 0, 1)
 
   return (
     <YearWrapper>

@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { WindowLocation } from '@reach/router'
 import { Footer } from './Footer'
-import { calendarToDictionary, getDateKey } from '../services/calendarService'
+import {
+  calendarToDictionary,
+  getDateKey,
+  transformDates,
+  ICalendar,
+  IServerEvent,
+} from '../services/calendarService'
 import { Logo } from './Images/Logo'
 import { CalendarIcon } from './Images/Icons'
 import { CalendarModal } from './Modals/CalendarModal'
 import { CountDown } from './Calendar/CountDown'
-import { Year as Calendar } from './Calendar/Year'
+import { Year } from './Calendar/Year'
 
 const Title = styled.h1`
   margin: 0;
@@ -94,23 +100,12 @@ const CalendarButton = styled.button`
   }
 `
 
-const NewLabel = styled.div`
-  position: absolute;
-  right: -1em;
-  top: -1.3em;
-  background: linear-gradient(to right, #318bc4, #1f5993);
-  padding: 0.2rem 0.5rem;
-  border-radius: 5rem;
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: #fff;
-`
-
 interface IProps {
   location: WindowLocation
 }
 
 export function App({ location }: IProps) {
+  const [year] = useState(new Date().getFullYear())
   const [calendarModalOpen, setOpenCalendarModal] = useState<boolean>(false)
   const data = useStaticQuery(graphql`
     {
@@ -126,10 +121,17 @@ export function App({ location }: IProps) {
       }
     }
   `)
+  const [calendarPath, events, dayDictionary] = useMemo(() => {
+    const content: ICalendar<IServerEvent> = JSON.parse(data.calendars.nodes[0].internal.content)
+      .VCALENDAR[0]
+    const calendarPath: string = data.calendars.nodes[0].relativePath.relativePath
+    const events = content.VEVENT.map(transformDates)
+    const dayDictionary = calendarToDictionary(events)
 
-  const content = JSON.parse(data.calendars.nodes[0].internal.content)
-  const calendarPath = data.calendars.nodes[0].relativePath.relativePath
-  const dayDictionary = calendarToDictionary(content.VCALENDAR[0])
+    console.log(dayDictionary)
+
+    return [calendarPath, events, dayDictionary]
+  }, [data])
 
   function getEvents(day: Date) {
     return dayDictionary[getDateKey(day)] || []
@@ -140,9 +142,9 @@ export function App({ location }: IProps) {
       <TopBar>
         <Title>
           <Logo />
-          <span>Calendar 2019</span>
+          <span>Calendar {year}</span>
         </Title>
-        <CountDown events={content.VCALENDAR[0].VEVENT} />
+        <CountDown events={events} />
         <CalendarButton
           onKeyDown={event => {
             if (event.key === 'Escape') {
@@ -153,12 +155,11 @@ export function App({ location }: IProps) {
         >
           <CalendarIcon />
           <span>Add to your own calendar</span>
-          <NewLabel>NEW</NewLabel>
         </CalendarButton>
       </TopBar>
 
       <main>
-        <Calendar getEvents={getEvents} />
+        <Year year={year} getEvents={getEvents} />
         {calendarModalOpen ? (
           <CalendarModal
             calendarLocation={`//${location.host}/calendars/${calendarPath}`}

@@ -47,25 +47,22 @@ export function Month({ name, dayAmount, startDate, getEvents }: IProps) {
   const days = Array(dayAmount)
     .fill(undefined)
     .map((_, i) => addDays(startDate, i))
-    .reduce(
-      (month, day, index, arr) => {
-        if (index === 0) {
-          month = prefixMonthDays(day)
-          month.push(day)
-          return month
-        }
-
-        if (index === arr.length - 1 && (month.length + 1) % daysInTheWeek !== 0) {
-          month.push(day)
-          month.concat(postfixMonthDays(index, month.length - 1))
-          return month
-        }
-
+    .reduce((month, day, index, arr) => {
+      if (index === 0) {
+        month = prefixMonthDays(day)
         month.push(day)
         return month
-      },
-      [] as Date[],
-    )
+      }
+
+      if (index === arr.length - 1 && (month.length + 1) % daysInTheWeek !== 0) {
+        month.push(day)
+        month.concat(postfixMonthDays(index, month.length - 1))
+        return month
+      }
+
+      month.push(day)
+      return month
+    }, [] as Date[])
 
   return (
     <MonthWrapper>

@@ -25,6 +25,10 @@ export function Footer() {
     <FooterWrapper>
       <p>Your way of finding FIA&nbsp;Formula&nbsp;2 upcoming races, schedules, and calendars.</p>
       <p>
+        Also check out <a href="https://f2standings.com">F2 Standings</a>!
+      </p>
+      <br />
+      <p>
         Crafted in 2019 by{' '}
         <a rel="noopener noreferrer" target="_blank" href="https://ruigrok.info">
           Christian&nbsp;Ruigrok

@@ -1,6 +1,6 @@
 const config = {
   siteMetadata: {
-    name: `Formula 2 Calendar 2019`,
+    name: `Formula 2 Calendar`,
     tagline: `Keep track of when FIA Formula 2 is live`,
   },
   plugins: [
@@ -35,7 +35,7 @@ const config = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Formula 2 Calendar 2019`,
+        name: `Formula 2 Calendar`,
         short_name: `F2 Calendar`,
         start_url: `/`,
         background_color: `#1f4c86`,

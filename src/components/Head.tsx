@@ -17,7 +17,7 @@ export function Head() {
       <meta property="og:title" content="Formula 2 Calendar" />
       <meta property="og:description" content="Keep track of when FIA Formula 2 races are live" />
       <meta property="og:image" content="https://f2calendar.com/images/og-image.png" />
-      <title>2019 F2 Calendar</title>
+      <title>F2 Calendar</title>
       <link rel="manifest" href="/manifest.json" />
       <link
         rel="stylesheet"

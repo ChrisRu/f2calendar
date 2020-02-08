@@ -130,6 +130,7 @@ export function EventModal({ event, onClose, popupLeft, popupTop }: IProps) {
   const countryCode = getCountryCode(event.LOCATION)
   const flagSrc = `/images/flags/${countryCode}.svg`
 
+  const isConcept = event.STATUS === 'NEEDS-ACTION'
   const location = event.LOCATION || 'Unknown Circuit, Unknown'
   const circuitName = location.split(', ')[0]
   const eventLocation = location.split(', ')[1]
@@ -144,10 +145,12 @@ export function EventModal({ event, onClose, popupLeft, popupTop }: IProps) {
       <Overlay onClick={onClose} />
       <Card country={countryCode} popupLeft={popupLeft} popupTop={popupTop}>
         <CardInfo>
-          <StartTime>
-            <span>{duration === 0 ? 'unknown' : localTime}</span>
-            <span>{timeZone}</span>
-          </StartTime>
+          {isConcept ? null : (
+            <StartTime>
+              <span>{duration === 0 ? 'unknown' : localTime}</span>
+              <span>{timeZone}</span>
+            </StartTime>
+          )}
           <p>{raceType}</p>
           <img src={flagSrc} alt={countryCode + ' flag'} />
           <h4>{eventLocation}</h4>

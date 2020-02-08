@@ -6,12 +6,9 @@ import isBefore from 'date-fns/isBefore'
 import { IEvent } from '../../services/calendarService'
 import { getNextEvent } from '../../services/eventService'
 
-interface IProps {
-  events: IEvent[]
-}
-
-const CountDownText = styled.div`
+const CountDownText = styled.div<{ noContent?: boolean }>`
   margin: -0.2rem auto;
+  line-height: ${p => (p.noContent ? '2.4rem' : 'initial')};
 
   span {
     display: block;
@@ -26,13 +23,22 @@ const CountDownText = styled.div`
   }
 `
 
+interface IProps {
+  events: IEvent[]
+}
+
 export function CountDown({ events }: IProps) {
   const [isClient, setIsClient] = useState(false)
+
   useEffect(() => setIsClient(true), [])
 
   const nextEvent = getNextEvent(events)
-  if (!isClient || nextEvent === undefined) {
+  if (!isClient) {
     return <CountDownText />
+  }
+
+  if (!nextEvent) {
+    return <CountDownText noContent>No upcoming events</CountDownText>
   }
 
   const currentDate = new Date()

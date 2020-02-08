@@ -18,7 +18,7 @@ enum RaceType {
 export const WeekDay = styled.div`
   display: block;
   margin: 0.2em 0.5em 0;
-  width: 1.3rem;
+  width: 1.325rem;
   height: 1.3rem;
   line-height: 1.3rem;
   float: left;
@@ -145,18 +145,18 @@ function DayComponent({ month, day, events }: IProps) {
   const isCurrentDay = isClient && isSameDay(day, new Date())
   const isPreviousDay = !isClient || isBefore(day, new Date())
 
-  const race = events[0] && events[0].SUMMARY ? events[0].SUMMARY.split(' (')[0] : undefined
+  const race = events[0]?.SUMMARY?.split(' (')[0]
   const raceType = !race
     ? RaceType.Unknown
-    : race.includes('Feature')
+    : race.endsWith('Feature race')
     ? RaceType.Feature
-    : race.includes('Qualifying')
-    ? RaceType.Qualifying
-    : race.includes('Sprint')
+    : race.endsWith('Sprint race')
     ? RaceType.Sprint
+    : race.endsWith('Qualifying')
+    ? RaceType.Qualifying
     : race.includes('Free practice')
     ? RaceType.FreePractice
-    : race.includes('Pre-season')
+    : race.startsWith('Pre-season')
     ? RaceType.PreSeason
     : RaceType.Unknown
 

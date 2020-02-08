@@ -16,6 +16,7 @@ const countryData = [
   ['Monza', 'IT'],
   ['Sochi', 'RU'],
   ['Abu Dhabi', 'AE'],
+  ['Zandvoort', 'NL'],
 ]
 
 export function getCountryCode(raceDescription?: string) {
@@ -37,6 +38,9 @@ export function getCountryCode(raceDescription?: string) {
 export function getNextEvent(events: IEvent[]): IEvent | undefined {
   const currentDate = new Date()
   const upcomingEvents = events.filter(event => isAfter(event.DTEND, currentDate))
-  const closestEventIndex = closestIndexTo(currentDate, upcomingEvents.map(event => event.DTSTART))
+  const closestEventIndex = closestIndexTo(
+    currentDate,
+    upcomingEvents.map(event => event.DTSTART),
+  )
   return upcomingEvents[closestEventIndex]
 }

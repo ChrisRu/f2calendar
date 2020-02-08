@@ -37,7 +37,7 @@ export interface ICalendar<T extends IEventBase> {
   VEVENT: T[]
 }
 
-function transformDates(event: IServerEvent): IEvent {
+export function transformDates(event: IServerEvent): IEvent {
   return Object.assign(event, {
     DTSTART: parseISO(event.DTSTART),
     DTEND: parseISO(event.DTEND),
@@ -45,15 +45,22 @@ function transformDates(event: IServerEvent): IEvent {
 }
 
 export function getDateKey(day: Date) {
-  return day.getMonth() + ':' + day.getDate()
+  console.log(day)
+  return day.toISOString().slice(0, 10)
 }
 
-export function calendarToDictionary(calendar: ICalendar<IServerEvent>) {
-  return calendar.VEVENT.map(transformDates).reduce<{
+export function calendarToDictionary(events: IEvent[]) {
+  type Dict = {
     [date: string]: IEvent[]
-  }>((dict, nextDate) => {
+  }
+
+  return events.reduce<Dict>((dict, nextDate) => {
     const key = getDateKey(nextDate.DTSTART)
-    dict[key] = (dict[key] || []).concat(nextDate)
+    if (key in dict) {
+      dict[key].push(nextDate)
+    } else {
+      dict[key] = [nextDate]
+    }
     return dict
   }, {})
 }
