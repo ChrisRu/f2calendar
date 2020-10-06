@@ -1,8 +1,8 @@
-# F2calendar.com
+# F2 Calendar
 
 ## Impressum
 
-[**F2calendar.com**](https://f2calendar.com) is your way of finding FIA Formula 2 upcoming races, schedules, and calendars.
+[**F2 Calendar**](https://f2calendar.netlify.com) is your way of finding FIA Formula 2 upcoming races, schedules, and calendars.
 
 ## Technology stack
 
